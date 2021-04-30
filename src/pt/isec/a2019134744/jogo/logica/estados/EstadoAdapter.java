@@ -6,12 +6,17 @@ public abstract class EstadoAdapter implements IEstado {
 
     private JogoConnect4 jogoConnect4;
 
-    public EstadoAdapter(JogoConnect4 jogoConnect4) {
+    protected EstadoAdapter(JogoConnect4 jogoConnect4) {
         this.jogoConnect4 = jogoConnect4;
     }
 
     @Override
     public IEstado comeca() {
+        return this;
+    }
+
+    @Override
+    public IEstado comeca(String... jogadores) {
         return this;
     }
 
