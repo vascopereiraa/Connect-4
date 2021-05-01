@@ -8,6 +8,13 @@ public class JogaMinijogo extends EstadoAdapter {
         super(jogoConnect4);
     }
 
+    // todo: metodos para jogar o jogo
+
+    @Override
+    public IEstado terminaMinijogo() {
+        return new AguardaJogada(super.getJogo());
+    }
+
     @Override
     public Situacao getSituacao() {
         return Situacao.JogaMinijogo;

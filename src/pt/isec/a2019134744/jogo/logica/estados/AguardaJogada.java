@@ -9,6 +9,35 @@ public class AguardaJogada extends EstadoAdapter {
     }
 
     @Override
+    public IEstado joga(int nColuna) {
+
+        // todo: joga peca normal
+        // todo: verifica se ganha
+
+        // caso seja a jogada nr 4 de cada jogador tem de ver para lancar o Decisao Minijogo
+
+        return new AguardaJogada(getJogo());
+    }
+
+    @Override
+    public IEstado jogaEspecial(int nColuna) {
+
+        // todo: joga peca especial
+        // todo: verifica se ganha
+
+        // caso seja a jogada nr 4 de cada jogador tem de ver para lancar o Decisao Minijogo
+
+
+        return new AguardaJogada(super.getJogo());
+    }
+
+    @Override
+    public IEstado termina() {
+        // super.getJogo().desiste();
+        return new FimJogo(super.getJogo());
+    }
+
+    @Override
     public Situacao getSituacao() {
         return Situacao.AguardaJogada;
     }

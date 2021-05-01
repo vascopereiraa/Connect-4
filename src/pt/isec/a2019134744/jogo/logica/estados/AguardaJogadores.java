@@ -10,7 +10,9 @@ public class AguardaJogadores extends EstadoAdapter {
 
     @Override
     public IEstado comeca(String... jogadores) {
-        super.getJogo().comecaJogo(jogadores);
+        super.getJogo().resetJogo();
+        if(!super.getJogo().comecaJogo(jogadores))
+            return this;
         return new AguardaJogada(super.getJogo());
     }
 

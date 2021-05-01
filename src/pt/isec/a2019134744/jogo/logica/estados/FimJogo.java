@@ -9,6 +9,12 @@ public class FimJogo extends EstadoAdapter {
     }
 
     @Override
+    public IEstado recomeca() {
+        super.getJogo().resetJogo();
+        return new Inicio(super.getJogo());
+    }
+
+    @Override
     public Situacao getSituacao() {
         return Situacao.FimJogo;
     }
