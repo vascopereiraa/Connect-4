@@ -15,10 +15,7 @@ public class DecisaoMinijogo extends EstadoAdapter {
 
     @Override
     public IEstado jogaMinijogo() {
-
-        // todo: pedir ao jogo para lancar o minijogo e retornar o estado do jogo
-        //if(!super.getJogo().lancaMinijogo)
-            return this;
+        return new JogaMinijogo(super.getJogo());
     }
 
     @Override

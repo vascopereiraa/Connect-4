@@ -2,17 +2,35 @@ package pt.isec.a2019134744.jogo.logica.estados;
 
 import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 
+import java.util.Scanner;
+
 public class JogaMinijogo extends EstadoAdapter {
 
     public JogaMinijogo(JogoConnect4 jogoConnect4) {
         super(jogoConnect4);
     }
 
-    // todo: metodos para jogar o jogo
+    public String getPerguntaMinijogo() {
+        return super.getJogo().getPerguntaMinijogo();
+    }
+
+    public String setRespostaMinijogo(Scanner sc) {
+        return super.getJogo().setRespostaMinijogo(sc);
+    }
 
     @Override
     public IEstado terminaMinijogo() {
-        return new AguardaJogada(super.getJogo());
+        if(super.getJogo().isFinished()) {
+            if(super.getJogo().isVencedorMinijogo()) {
+                super.getJogo().ganhaPecaEspecial();
+                super.getJogo().switchMinijogo();
+                return new AguardaJogada(super.getJogo());
+            }
+            super.getJogo().switchJogadorAtivo();
+            super.getJogo().switchMinijogo();
+            return new AguardaJogada(super.getJogo());
+        }
+        return this;
     }
 
     @Override

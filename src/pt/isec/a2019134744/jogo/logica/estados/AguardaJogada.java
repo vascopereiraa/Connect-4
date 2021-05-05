@@ -10,30 +10,41 @@ public class AguardaJogada extends EstadoAdapter {
 
     @Override
     public IEstado joga(int nColuna) {
-
-        // todo: joga peca normal
-        // todo: verifica se ganha
-
-        // caso seja a jogada nr 4 de cada jogador tem de ver para lancar o Decisao Minijogo
-
-        return new AguardaJogada(getJogo());
+        // Vê se consegue jogar a peça
+        if(super.getJogo().jogaPeca(nColuna)) {
+            // Verifica se é o vencedor
+            if (super.getJogo().isVencedor() != null)
+                // Se for o vencedor termina o jogo
+                return new FimJogo(super.getJogo());
+            if(super.getJogo().getNJogadaHumano() % 5 == 0)
+                // Se for a jogada de um humano lança DecisaoMiniJogo
+                return new DecisaoMinijogo(super.getJogo());
+            // Continua jogo
+            return new AguardaJogada(super.getJogo());
+        }
+        // Se não conseguir jogar a peça
+        return this;
     }
 
     @Override
     public IEstado jogaEspecial(int nColuna) {
-
-        // todo: joga peca especial
-        // todo: verifica se ganha
-
-        // caso seja a jogada nr 4 de cada jogador tem de ver para lancar o Decisao Minijogo
-
-
-        return new AguardaJogada(super.getJogo());
+        if(super.getJogo().jogaPecaEspecial(nColuna)) {
+            if (super.getJogo().isFinished())
+                // Se for o vencedor termina o jogo
+                return new FimJogo(super.getJogo());
+            if(super.getJogo().getNJogadaHumano() % 5 == 0)
+                // Se for a jogada de um humano lança DecisaoMiniJogo
+                return new DecisaoMinijogo(super.getJogo());
+            // Continua jogo
+            return new AguardaJogada(super.getJogo());
+        }
+        // Se não conseguir jogar a peça
+        return this;
     }
 
     @Override
     public IEstado termina() {
-        // super.getJogo().desiste();
+        super.getJogo().desiste();
         return new FimJogo(super.getJogo());
     }
 

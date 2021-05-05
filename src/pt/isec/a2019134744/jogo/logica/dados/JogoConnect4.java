@@ -3,35 +3,38 @@ package pt.isec.a2019134744.jogo.logica.dados;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Humano;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Player;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Virtual;
+import pt.isec.a2019134744.jogo.logica.dados.minijogos.IJogo;
+import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoCalculos;
+import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoPalavras;
 
-import java.util.Arrays;
+import java.util.Scanner;
 
 public class JogoConnect4 {
 
-    private final int NR_LINHAS = 7;
-    private final int NR_COLUNAS = 6;
-
-    // Tabuleiro provisorio
-    char[][] tabuleiro;
-
     private Player jogador1;
     private Player jogador2;
+    private Player jogadorAtivo;
+    private final Tabuleiro tabuleiro;
+    private boolean isJogoTerminado;
+
+    // Minijogos
+    private final IJogo jogoCalculos;
+    private final IJogo jogoPalavras;
+    private IJogo jogoAtivo;
 
     public JogoConnect4() {
+        this.tabuleiro = new Tabuleiro();
+        this.jogoCalculos = new JogoCalculos();
+        this.jogoPalavras = new JogoPalavras();
         resetJogo();
     }
 
     public void resetJogo() {
-        criaTabuleiro();
+        tabuleiro.resetTabuleiro();
         jogador1 = null;
         jogador2 = null;
-    }
-
-    // Codigo provisorio
-    private void criaTabuleiro() {
-        tabuleiro = new char[NR_LINHAS][NR_COLUNAS];
-        for (char[] chars : tabuleiro)
-            Arrays.fill(chars, '_');
+        isJogoTerminado = false;
+        jogoAtivo = jogoCalculos;
     }
 
     // Apenas sao pedidos os nomes dos jogadores humanos
@@ -47,18 +50,104 @@ public class JogoConnect4 {
     }
 
     private void adicionaJogadores(String jogador1, String jogador2) {
-        this.jogador1 = new Humano(jogador1);
-        this.jogador2 = new Humano(jogador2);
+        this.jogador1 = new Humano(jogador1, Peca.Vermelha);
+        this.jogador2 = new Humano(jogador2, Peca.Amarela);
     }
 
     private void adicionaJogadores(String jogador1) {
-        this.jogador1 = new Humano(jogador1);
-        this.jogador2 = new Virtual(2);
+        this.jogador1 = new Humano(jogador1, Peca.Vermelha);
+        this.jogador2 = new Virtual(2, Peca.Amarela);
     }
 
     private void adicionaJogadores() {
-        this.jogador1 = new Virtual(1);
-        this.jogador2 = new Virtual(2);
+        this.jogador1 = new Virtual(1, Peca.Vermelha);
+        this.jogador2 = new Virtual(2, Peca.Amarela);
     }
 
+    public void switchJogadorAtivo() {
+        if(jogadorAtivo == jogador1)
+            jogadorAtivo = jogador2;
+        else
+            jogadorAtivo = jogador1;
+    }
+
+    public boolean jogaPeca(int nColuna) {
+        if(!tabuleiro.introduzPeca(nColuna, jogadorAtivo.getPeca()))
+            return false;      // Nao conseguiu jogar a peça -> pede novamente
+
+        // Consegue jogar peça
+        // Se for humano vai incrementar contador de jogada
+        if(jogadorAtivo instanceof Humano) {
+            Humano a = (Humano) jogadorAtivo;
+            a.incNJogada();
+        }
+        switchJogadorAtivo();
+        return true;
+    }
+
+    public boolean jogaPecaEspecial(int nColuna) {
+        if(!jogadorAtivo.jogaPecaEspecial())
+            return false;
+        tabuleiro.removeColuna(nColuna);
+        switchJogadorAtivo();
+        return true;
+    }
+
+    public Player isVencedor() {
+        if(tabuleiro.verificaVencedor(jogadorAtivo.getPeca())) {
+            isJogoTerminado = true;
+            return jogadorAtivo;
+        }
+        return null;
+    }
+
+    public int getNJogadaHumano() {
+        if(jogadorAtivo instanceof Humano) {
+            Humano a = (Humano) jogadorAtivo;
+            return a.getnJogada();
+        }
+        return -1;
+    }
+
+    public boolean isFinished() {
+        return isJogoTerminado;
+    }
+
+    public void desiste() {
+        isJogoTerminado = true;
+    }
+
+    /* Métodos de controlo do Minijogo */
+
+    public void lancaJogo() {
+        jogoAtivo.inicializaJogo();
+    }
+
+    public String getPerguntaMinijogo() {
+        return jogoAtivo.getPergunta();
+    }
+
+    public String setRespostaMinijogo(Scanner sc) {
+        return jogoAtivo.setResposta(sc);
+    }
+
+    public boolean isFinishedMinijogo() {
+        return jogoAtivo.isFinished();
+    }
+
+    public boolean isVencedorMinijogo() {
+        return jogoAtivo.isVencedor();
+    }
+
+    public void switchMinijogo() {
+        if(jogoAtivo instanceof JogoCalculos)
+            jogoAtivo = jogoPalavras;
+        else
+            jogoAtivo = jogoCalculos;
+    }
+
+    public void ganhaPecaEspecial() {
+        Humano a = (Humano) jogadorAtivo;
+        a.ganhaPecaEspecial();
+    }
 }
