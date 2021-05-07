@@ -5,6 +5,8 @@ import pt.isec.a2019134744.jogo.logica.estados.IEstado;
 import pt.isec.a2019134744.jogo.logica.estados.Inicio;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 
+import java.util.Scanner;
+
 public class MaquinaEstados {
 
     private IEstado atual;
@@ -56,6 +58,23 @@ public class MaquinaEstados {
         return atual.getSituacao();
     }
 
-    /* FUNCOES DO JOGO & MINIJOGO */
+    /* FUNCOES DO JOGO */
+    public String getInfoJogo() {
+        return jogoConnect4.toString();
+    }
 
+    public boolean isHumano() { return jogoConnect4.isHumano(); }
+
+    public String getTabuleiro() {
+        return jogoConnect4.imprimeTabuleiroJogo();
+    }
+
+    /* FUNCOES DOS MINIJOGOS */
+    public String getPerguntaMinijogo() {
+        return jogoConnect4.getPerguntaMinijogo();
+    }
+
+    public String setRespostaMinijogo(Scanner sc) {
+        return jogoConnect4.setRespostaMinijogo(sc);
+    }
 }

@@ -46,6 +46,13 @@ public class JogoConnect4 {
             case 1 -> adicionaJogadores(jogadores[0]);
             default -> adicionaJogadores(jogadores[0], jogadores[1]);
         }
+        // Sortear o primeiro jogador
+        int random = (int) (Math.random() * 2) + 1;
+        if(random == 1)
+            jogadorAtivo = jogador1;
+        else
+            jogadorAtivo = jogador2;
+
         return true;
     }
 
@@ -71,13 +78,17 @@ public class JogoConnect4 {
             jogadorAtivo = jogador1;
     }
 
+    public String imprimeTabuleiroJogo() {
+        return tabuleiro.imprimeTab();
+    }
+
     public boolean jogaPeca(int nColuna) {
         if(!tabuleiro.introduzPeca(nColuna, jogadorAtivo.getPeca()))
             return false;      // Nao conseguiu jogar a peça -> pede novamente
 
         // Consegue jogar peça
         // Se for humano vai incrementar contador de jogada
-        if(jogadorAtivo instanceof Humano) {
+        if(isHumano()) {
             Humano a = (Humano) jogadorAtivo;
             a.incNJogada();
         }
@@ -102,7 +113,7 @@ public class JogoConnect4 {
     }
 
     public int getNJogadaHumano() {
-        if(jogadorAtivo instanceof Humano) {
+        if(isHumano()) {
             Humano a = (Humano) jogadorAtivo;
             return a.getnJogada();
         }
@@ -115,11 +126,30 @@ public class JogoConnect4 {
 
     public void desiste() {
         isJogoTerminado = true;
+        switchJogadorAtivo();   // Jogador que ganhou é o ativo
+    }
+
+    public boolean isHumano() {
+        return jogadorAtivo instanceof Humano;
+    }
+
+    @Override
+    public String toString() {
+        return "JogoConnect4{" +
+                "jogador1=" + jogador1 +
+                ", jogador2=" + jogador2 +
+                ", jogadorAtivo=" + jogadorAtivo +
+                ", tabuleiro=" + tabuleiro +
+                ", isJogoTerminado=" + isJogoTerminado +
+                ", jogoCalculos=" + jogoCalculos +
+                ", jogoPalavras=" + jogoPalavras +
+                ", jogoAtivo=" + jogoAtivo +
+                '}';
     }
 
     /* Métodos de controlo do Minijogo */
 
-    public void lancaJogo() {
+    public void lancaMinijogo() {
         jogoAtivo.inicializaJogo();
     }
 

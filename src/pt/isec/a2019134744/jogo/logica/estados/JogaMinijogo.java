@@ -8,6 +8,7 @@ public class JogaMinijogo extends EstadoAdapter {
 
     public JogaMinijogo(JogoConnect4 jogoConnect4) {
         super(jogoConnect4);
+        super.getJogo().lancaMinijogo();
     }
 
     public String getPerguntaMinijogo() {
@@ -20,7 +21,7 @@ public class JogaMinijogo extends EstadoAdapter {
 
     @Override
     public IEstado terminaMinijogo() {
-        if(super.getJogo().isFinished()) {
+        if(super.getJogo().isFinishedMinijogo()) {
             if(super.getJogo().isVencedorMinijogo()) {
                 super.getJogo().ganhaPecaEspecial();
                 super.getJogo().switchMinijogo();
@@ -36,5 +37,5 @@ public class JogaMinijogo extends EstadoAdapter {
     @Override
     public Situacao getSituacao() {
         return Situacao.JogaMinijogo;
-    }
+    }1
 }
