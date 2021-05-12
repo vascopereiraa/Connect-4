@@ -2,12 +2,13 @@ package pt.isec.a2019134744.jogo.logica.dados;
 
 import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Tabuleiro {
+public class Tabuleiro implements Serializable {
     // Constantes
-    private final int NR_LINHAS = 7;
-    private final int NR_COLUNAS = 6;
+    private final int NR_LINHAS = 6;
+    private final int NR_COLUNAS = 7;
 
     private Peca[][] tab;
 
@@ -22,7 +23,7 @@ public class Tabuleiro {
     }
 
     String imprimeTab() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("\n");
         for(Peca[] linha : tab) {
             for (Peca item : linha) {
                 sb.append("|");
@@ -39,7 +40,7 @@ public class Tabuleiro {
     }
 
     boolean introduzPeca(int nColuna, Peca peca) {
-        if(nColuna - 1 < 0 || nColuna - 1 > 7)
+        if(!isColunaValida(nColuna))
             return false;
         for(int i = tab.length - 1; i >= 0; --i)
             if(tab[i][nColuna - 1] == Peca.none) {
@@ -112,9 +113,16 @@ public class Tabuleiro {
         return false;
     }
 
-    public void removeColuna(int nColuna) {
+    public boolean removeColuna(int nColuna) {
+        if(!isColunaValida(nColuna))
+            return false;
         for(int i = 0; i < NR_LINHAS; ++i)
-            tab[i][nColuna] = Peca.none;
+            tab[i][nColuna - 1] = Peca.none;
+        return true;
+    }
+
+    private boolean isColunaValida(int nColuna) {
+        return !(nColuna - 1 < 0 || nColuna - 1 > NR_COLUNAS);
     }
 
 }

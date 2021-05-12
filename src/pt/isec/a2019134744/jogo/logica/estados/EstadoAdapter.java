@@ -2,7 +2,9 @@ package pt.isec.a2019134744.jogo.logica.estados;
 
 import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 
-public abstract class EstadoAdapter implements IEstado {
+import java.io.Serializable;
+
+public abstract class EstadoAdapter implements IEstado, Serializable {
 
     private JogoConnect4 jogoConnect4;
 

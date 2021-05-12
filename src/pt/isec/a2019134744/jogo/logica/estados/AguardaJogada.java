@@ -16,10 +16,13 @@ public class AguardaJogada extends EstadoAdapter {
             if (super.getJogo().isVencedor() != null)
                 // Se for o vencedor termina o jogo
                 return new FimJogo(super.getJogo());
-            if(super.getJogo().getNJogadaHumano() % 5 == 0)
+            if((super.getJogo().getNJogadaHumano() % 5) == 0) {
                 // Se for a jogada de um humano lança DecisaoMiniJogo
+                super.getJogo().switchJogadorAtivo();
                 return new DecisaoMinijogo(super.getJogo());
+            }
             // Continua jogo
+            super.getJogo().switchJogadorAtivo();
             return new AguardaJogada(super.getJogo());
         }
         // Se não conseguir jogar a peça

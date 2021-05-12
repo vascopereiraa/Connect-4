@@ -37,5 +37,5 @@ public class JogaMinijogo extends EstadoAdapter {
     @Override
     public Situacao getSituacao() {
         return Situacao.JogaMinijogo;
-    }1
+    }
 }

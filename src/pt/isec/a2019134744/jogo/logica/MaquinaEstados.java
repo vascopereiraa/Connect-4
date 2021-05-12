@@ -4,13 +4,16 @@ import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 import pt.isec.a2019134744.jogo.logica.estados.IEstado;
 import pt.isec.a2019134744.jogo.logica.estados.Inicio;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
+import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
+import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class MaquinaEstados {
+public class MaquinaEstados implements IMementoOriginator, Serializable {
 
     private IEstado atual;
-    private final JogoConnect4 jogoConnect4;
+    private JogoConnect4 jogoConnect4;
 
     public MaquinaEstados() {
         this.jogoConnect4 = new JogoConnect4();
@@ -69,6 +72,8 @@ public class MaquinaEstados {
         return jogoConnect4.imprimeTabuleiroJogo();
     }
 
+    public String getNomeJogador() { return jogoConnect4.getNomeJogador(); }
+
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
         return jogoConnect4.getPerguntaMinijogo();
@@ -76,5 +81,16 @@ public class MaquinaEstados {
 
     public String setRespostaMinijogo(Scanner sc) {
         return jogoConnect4.setRespostaMinijogo(sc);
+    }
+
+    // todo;
+    @Override
+    public Memento getMemento() {
+        return jogoConnect4.getMemento();
+    }
+
+    @Override
+    public void setMemento(Memento m) {
+        jogoConnect4.setMemento(m);
     }
 }

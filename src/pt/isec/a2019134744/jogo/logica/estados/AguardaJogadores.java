@@ -2,7 +2,9 @@ package pt.isec.a2019134744.jogo.logica.estados;
 
 import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 
-public class AguardaJogadores extends EstadoAdapter {
+import java.io.Serializable;
+
+public class AguardaJogadores extends EstadoAdapter implements Serializable {
 
     public AguardaJogadores(JogoConnect4 jogoConnect4) {
         super(jogoConnect4);

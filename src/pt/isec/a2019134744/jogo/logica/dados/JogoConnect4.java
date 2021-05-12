@@ -6,15 +6,18 @@ import pt.isec.a2019134744.jogo.logica.dados.jogadores.Virtual;
 import pt.isec.a2019134744.jogo.logica.dados.minijogos.IJogo;
 import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoCalculos;
 import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoPalavras;
+import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
+import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class JogoConnect4 {
+public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     private Player jogador1;
     private Player jogador2;
     private Player jogadorAtivo;
-    private final Tabuleiro tabuleiro;
+    private Tabuleiro tabuleiro;
     private boolean isJogoTerminado;
 
     // Minijogos
@@ -52,7 +55,6 @@ public class JogoConnect4 {
             jogadorAtivo = jogador1;
         else
             jogadorAtivo = jogador2;
-
         return true;
     }
 
@@ -83,23 +85,22 @@ public class JogoConnect4 {
     }
 
     public boolean jogaPeca(int nColuna) {
-        if(!tabuleiro.introduzPeca(nColuna, jogadorAtivo.getPeca()))
-            return false;      // Nao conseguiu jogar a peça -> pede novamente
-
         // Consegue jogar peça
         // Se for humano vai incrementar contador de jogada
         if(isHumano()) {
             Humano a = (Humano) jogadorAtivo;
             a.incNJogada();
         }
-        switchJogadorAtivo();
-        return true;
+
+        // Nao conseguiu jogar a peça -> pede novamente
+        return tabuleiro.introduzPeca(nColuna, jogadorAtivo.getPeca());
     }
 
     public boolean jogaPecaEspecial(int nColuna) {
         if(!jogadorAtivo.jogaPecaEspecial())
             return false;
-        tabuleiro.removeColuna(nColuna);
+        if(!tabuleiro.removeColuna(nColuna))
+            return false;
         switchJogadorAtivo();
         return true;
     }
@@ -132,6 +133,8 @@ public class JogoConnect4 {
     public boolean isHumano() {
         return jogadorAtivo instanceof Humano;
     }
+
+    public String getNomeJogador() { return jogadorAtivo.getNome(); }
 
     @Override
     public String toString() {
@@ -179,5 +182,23 @@ public class JogoConnect4 {
     public void ganhaPecaEspecial() {
         Humano a = (Humano) jogadorAtivo;
         a.ganhaPecaEspecial();
+    }
+
+    // todo;
+    @Override
+    public Memento getMemento() {
+        return new Memento(new Object[] {
+                jogador1, jogador2, jogadorAtivo, tabuleiro, isJogoTerminado
+        });
+    }
+
+    @Override
+    public void setMemento(Memento m) {
+        Object[] array = (Object[]) m.getSnapshot();
+        jogador1 = (Player) array[0];
+        jogador2 = (Player) array[1];
+        jogadorAtivo = (Player) array[2];
+        tabuleiro = (Tabuleiro) array[3];
+        isJogoTerminado = (boolean) array[4];
     }
 }

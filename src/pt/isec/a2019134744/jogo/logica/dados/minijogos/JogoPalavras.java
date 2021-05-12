@@ -1,6 +1,7 @@
 package pt.isec.a2019134744.jogo.logica.dados.minijogos;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

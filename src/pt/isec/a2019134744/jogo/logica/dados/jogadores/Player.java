@@ -2,7 +2,9 @@ package pt.isec.a2019134744.jogo.logica.dados.jogadores;
 
 import pt.isec.a2019134744.jogo.logica.dados.Peca;
 
-public abstract class Player {
+import java.io.Serializable;
+
+public abstract class Player implements Serializable {
     private final String nome;
     private final Peca peca;
 
