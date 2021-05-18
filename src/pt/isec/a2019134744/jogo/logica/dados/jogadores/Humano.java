@@ -7,10 +7,13 @@ public class Humano extends Player {
     private int nJogada;
     private int nPecasEspeciais;
 
+    private int creditos;       // Creditos para o undo
+
     public Humano(String nome, Peca peca) {
         super(nome, peca);
-        this.nJogada = 0;
+        this.nJogada = 1;
         this.nPecasEspeciais = 0;
+        this.creditos = 5;
     }
 
     public int getnJogada() {
@@ -31,5 +34,16 @@ public class Humano extends Player {
 
     public void ganhaPecaEspecial() {
         ++nPecasEspeciais;
+    }
+
+    public int getCreditos() { return creditos; }
+
+    public void setCreditos(int creditos) { this.creditos = creditos; }
+
+    public boolean usaCreditos(int creditos) {
+        if(this.creditos < creditos)
+            return false;
+        this.creditos -= creditos;
+        return true;
     }
 }

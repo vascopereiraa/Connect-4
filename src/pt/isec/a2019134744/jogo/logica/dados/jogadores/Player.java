@@ -16,7 +16,14 @@ public abstract class Player implements Serializable {
     public String getNome() {
         return nome;
     }
+
     public Peca getPeca() { return peca; }
 
-    public abstract boolean jogaPecaEspecial();
+    public boolean jogaPecaEspecial() { return false; };
+
+    public boolean usaCreditos(int creditos) { return false; }
+
+    public void setCreditos(int creditos) { }
+
+    public int getCreditos() { return 0; }
 }

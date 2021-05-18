@@ -6,8 +6,8 @@ import pt.isec.a2019134744.jogo.logica.memento.CareTaker;
 import java.util.Scanner;
 
 public class GestorDeJogo {
-    private MaquinaEstados maquinaEstados;
-    private CareTaker careTaker;
+    private final MaquinaEstados maquinaEstados;
+    private final CareTaker careTaker;
 
     public GestorDeJogo() {
         this.maquinaEstados = new MaquinaEstados();
@@ -15,8 +15,12 @@ public class GestorDeJogo {
     }
 
     /* FUNCOES DO CARETAKER */
-    public void undo() {
-        careTaker.undo();
+    public void undo(int nJogadas) {
+        careTaker.undo(nJogadas);
+    }
+
+    public void resetUndo() {
+        careTaker.reset();
     }
 
     /* FUNCOES DA MAQUINA DE ESTADOS */
@@ -33,14 +37,12 @@ public class GestorDeJogo {
     }
 
     public void joga(int nColuna) {
-        if(isHumano())
-            careTaker.gravaMemento();
+        careTaker.gravaMemento();
         maquinaEstados.joga(nColuna);
     }
 
     public void jogaEspecial(int nColuna) {
-        if(isHumano())
-            careTaker.gravaMemento();
+        careTaker.gravaMemento();
         maquinaEstados.jogaEspecial(nColuna);
     }
 
@@ -57,6 +59,7 @@ public class GestorDeJogo {
     }
 
     public void recomeca() {
+        careTaker.reset();
         maquinaEstados.recomeca();
     }
 
@@ -84,5 +87,13 @@ public class GestorDeJogo {
 
     public String setRespostaMinijogo(Scanner sc) {
         return maquinaEstados.setRespostaMinijogo(sc);
+    }
+
+    @Override
+    public String toString() {
+        return "GestorDeJogo{" +
+                careTaker + "\n" +
+                maquinaEstados +
+                '}';
     }
 }

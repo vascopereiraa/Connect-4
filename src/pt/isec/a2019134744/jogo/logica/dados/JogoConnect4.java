@@ -1,6 +1,7 @@
 package pt.isec.a2019134744.jogo.logica.dados;
 
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Humano;
+import pt.isec.a2019134744.jogo.logica.dados.jogadores.JogadorAtivo;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Player;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Virtual;
 import pt.isec.a2019134744.jogo.logica.dados.minijogos.IJogo;
@@ -10,13 +11,17 @@ import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
 import java.io.Serializable;
+import java.util.Deque;
 import java.util.Scanner;
 
 public class JogoConnect4 implements IMementoOriginator, Serializable {
 
+    // Dados Jogadores
     private Player jogador1;
     private Player jogador2;
-    private Player jogadorAtivo;
+    private JogadorAtivo jogadorAtivo;
+
+    // Dados Tabuleiro Jogo
     private Tabuleiro tabuleiro;
     private boolean isJogoTerminado;
 
@@ -36,6 +41,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         tabuleiro.resetTabuleiro();
         jogador1 = null;
         jogador2 = null;
+        jogadorAtivo = JogadorAtivo.none;
         isJogoTerminado = false;
         jogoAtivo = jogoCalculos;
     }
@@ -52,9 +58,9 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         // Sortear o primeiro jogador
         int random = (int) (Math.random() * 2) + 1;
         if(random == 1)
-            jogadorAtivo = jogador1;
+            jogadorAtivo = JogadorAtivo.jogador1;
         else
-            jogadorAtivo = jogador2;
+            jogadorAtivo = JogadorAtivo.jogador2;
         return true;
     }
 
@@ -74,11 +80,13 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public void switchJogadorAtivo() {
-        if(jogadorAtivo == jogador1)
-            jogadorAtivo = jogador2;
+        if(jogadorAtivo == JogadorAtivo.jogador1)
+            jogadorAtivo = JogadorAtivo.jogador2;
         else
-            jogadorAtivo = jogador1;
+            jogadorAtivo = JogadorAtivo.jogador1;
     }
+
+    private Player getJogadorAtivo() { return jogadorAtivo == JogadorAtivo.jogador1 ? jogador1 : jogador2; }
 
     public String imprimeTabuleiroJogo() {
         return tabuleiro.imprimeTab();
@@ -88,16 +96,16 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         // Consegue jogar peça
         // Se for humano vai incrementar contador de jogada
         if(isHumano()) {
-            Humano a = (Humano) jogadorAtivo;
+            Humano a = (Humano) getJogadorAtivo();
             a.incNJogada();
         }
 
         // Nao conseguiu jogar a peça -> pede novamente
-        return tabuleiro.introduzPeca(nColuna, jogadorAtivo.getPeca());
+        return tabuleiro.introduzPeca(nColuna, getJogadorAtivo().getPeca());
     }
 
     public boolean jogaPecaEspecial(int nColuna) {
-        if(!jogadorAtivo.jogaPecaEspecial())
+        if(!getJogadorAtivo().jogaPecaEspecial())
             return false;
         if(!tabuleiro.removeColuna(nColuna))
             return false;
@@ -105,24 +113,20 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         return true;
     }
 
-    public Player isVencedor() {
-        if(tabuleiro.verificaVencedor(jogadorAtivo.getPeca())) {
+    public JogadorAtivo isVencedor() {
+        if(tabuleiro.verificaVencedor(getJogadorAtivo().getPeca())) {
             isJogoTerminado = true;
             return jogadorAtivo;
         }
-        return null;
+        return JogadorAtivo.none;
     }
 
     public int getNJogadaHumano() {
         if(isHumano()) {
-            Humano a = (Humano) jogadorAtivo;
+            Humano a = (Humano) getJogadorAtivo();
             return a.getnJogada();
         }
         return -1;
-    }
-
-    public boolean isFinished() {
-        return isJogoTerminado;
     }
 
     public void desiste() {
@@ -131,27 +135,24 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public boolean isHumano() {
-        return jogadorAtivo instanceof Humano;
+        return getJogadorAtivo() instanceof Humano;
     }
 
-    public String getNomeJogador() { return jogadorAtivo.getNome(); }
+    public String getNomeJogador() { return getJogadorAtivo().getNome(); }
 
     @Override
     public String toString() {
-        return "JogoConnect4{" +
-                "jogador1=" + jogador1 +
-                ", jogador2=" + jogador2 +
-                ", jogadorAtivo=" + jogadorAtivo +
-                ", tabuleiro=" + tabuleiro +
-                ", isJogoTerminado=" + isJogoTerminado +
-                ", jogoCalculos=" + jogoCalculos +
-                ", jogoPalavras=" + jogoPalavras +
-                ", jogoAtivo=" + jogoAtivo +
-                '}';
+        StringBuilder sb = new StringBuilder("JogoConnect4 = {jogadorAtivo=" + getJogadorAtivo().getNome());
+        if(isHumano())
+            sb.append(String.format(", creditos=%d, njogadas=%d}}\n", ((Humano) getJogadorAtivo()).getCreditos(), (
+                    (Humano) getJogadorAtivo()).getnJogada()));
+        else
+            sb.append("}}\n");
+
+        return sb.toString();
     }
 
     /* Métodos de controlo do Minijogo */
-
     public void lancaMinijogo() {
         jogoAtivo.inicializaJogo();
     }
@@ -180,25 +181,35 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public void ganhaPecaEspecial() {
-        Humano a = (Humano) jogadorAtivo;
+        Humano a = (Humano) getJogadorAtivo();
         a.ganhaPecaEspecial();
     }
 
-    // todo;
     @Override
     public Memento getMemento() {
         return new Memento(new Object[] {
-                jogador1, jogador2, jogadorAtivo, tabuleiro, isJogoTerminado
+            jogador1, jogador2, jogadorAtivo, tabuleiro
         });
     }
 
     @Override
-    public void setMemento(Memento m) {
-        Object[] array = (Object[]) m.getSnapshot();
-        jogador1 = (Player) array[0];
-        jogador2 = (Player) array[1];
-        jogadorAtivo = (Player) array[2];
-        tabuleiro = (Tabuleiro) array[3];
-        isJogoTerminado = (boolean) array[4];
+    public boolean setMemento(Memento m, int nJogadas) {
+        if (getJogadorAtivo().usaCreditos(nJogadas)) {
+
+            int creditosJogador1 = jogador1.getCreditos();
+            int creditosJogador2 = jogador2.getCreditos();
+
+            Object[] array = (Object[]) m.getSnapshot();
+            jogador1 = (Player) array[0];
+            jogador2 = (Player) array[1];
+            jogadorAtivo = (JogadorAtivo) array[2];
+            tabuleiro = (Tabuleiro) array[3];
+
+            jogador1.setCreditos(creditosJogador1);
+            jogador2.setCreditos(creditosJogador2);
+
+            return true;
+        }
+        return false;
     }
 }

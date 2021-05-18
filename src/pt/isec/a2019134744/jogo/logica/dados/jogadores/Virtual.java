@@ -8,8 +8,4 @@ public class Virtual extends Player {
         super("Computador" + nJogador, peca);
     }
 
-    @Override
-    public boolean jogaPecaEspecial() {
-        return false;
-    }
 }

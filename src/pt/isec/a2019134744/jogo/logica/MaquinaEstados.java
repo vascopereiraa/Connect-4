@@ -8,6 +8,7 @@ import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
 import java.io.Serializable;
+import java.util.Deque;
 import java.util.Scanner;
 
 public class MaquinaEstados implements IMementoOriginator, Serializable {
@@ -83,14 +84,21 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return jogoConnect4.setRespostaMinijogo(sc);
     }
 
-    // todo;
+    /* FUNCOES PARA O UNDO */
     @Override
     public Memento getMemento() {
         return jogoConnect4.getMemento();
     }
 
     @Override
-    public void setMemento(Memento m) {
-        jogoConnect4.setMemento(m);
+    public boolean setMemento(Memento m, int nJogadas) {
+        return jogoConnect4.setMemento(m, nJogadas);
+    }
+
+    @Override
+    public String toString() {
+        return "MaquinaEstados{" +
+                "jogoConnect4=" + jogoConnect4 +
+                '}';
     }
 }

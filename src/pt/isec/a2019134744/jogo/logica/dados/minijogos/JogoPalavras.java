@@ -1,16 +1,16 @@
 package pt.isec.a2019134744.jogo.logica.dados.minijogos;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class JogoPalavras implements IJogo {
 
-    private static final List<String> PALAVRAS_DATASET = new ArrayList<>();
+    private static final List<String> PALAVRAS_DATASET;
 
     static {
+        PALAVRAS_DATASET = new ArrayList<>();
         File f = new File("palavras.txt");
         try (Scanner sc = new Scanner(f)) {
             while (sc.hasNextLine()) {

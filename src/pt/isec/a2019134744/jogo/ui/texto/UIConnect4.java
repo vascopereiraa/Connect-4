@@ -50,6 +50,7 @@ public class UIConnect4 {
 
     private void uiDecisaoMinijogo() {
         System.out.println(ConsoleColors.BLUE + "Decisao do Minijogo" + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo);
         switch (Util.escolheOpcao("Jogar o minijogo", "Desistir do minijogo")) {
             case 1 -> gestorDeJogo.jogaMinijogo();
             case 0 -> gestorDeJogo.desisteMinijogo();
@@ -59,12 +60,13 @@ public class UIConnect4 {
     private void uiAguardaJogada() {
         System.out.println(ConsoleColors.BLUE + "Aguarda Jogada" + ConsoleColors.RESET);
         // System.out.println(gestorDeJogo.getInfoJogo());
+        System.out.println(gestorDeJogo);
         System.out.println(gestorDeJogo.getTabuleiro());
         System.out.println(" ");
         switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Desistir")) {
             case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
             case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
-            case 3 -> gestorDeJogo.undo();
+            case 3 -> gestorDeJogo.undo(Util.pedeInteiro("Numero de jogadas a reverter: "));
             case 0 -> gestorDeJogo.termina();
         }
     }
@@ -91,6 +93,7 @@ public class UIConnect4 {
     private void jogaVirtual() {
         System.out.println(gestorDeJogo.getSituacao());
         System.out.println(ConsoleColors.BLUE + "Jogador Virtual" + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo);
         int random = (int) (Math.random() * 7) + 1;
         System.out.println(gestorDeJogo.getNomeJogador() + ": Vou jogar uma peça na coluna " + random);
         gestorDeJogo.joga(random);

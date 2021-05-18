@@ -1,5 +1,6 @@
 package pt.isec.a2019134744.jogo.logica.estados;
 
+import pt.isec.a2019134744.jogo.logica.GestorDeJogo;
 import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 
 public class FimJogo extends EstadoAdapter {

@@ -1,5 +1,7 @@
 package pt.isec.a2019134744.jogo.logica.memento;
 
+import pt.isec.a2019134744.jogo.logica.GestorDeJogo;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -15,15 +17,31 @@ public class CareTaker {
         stackUndo.push(originator.getMemento());
     }
 
-
     // todo: Momento em que é verificado se é humano e se tem creditos suficientes para andar para tras
-    public void undo() {
-        if(stackUndo.isEmpty())
+    public void undo(int nJogadas) {
+        if(stackUndo.size() < nJogadas)
             return;
 
-        Memento anterior = stackUndo.pop();
-        originator.setMemento(anterior);
+        Deque<Memento> anteriores = new ArrayDeque<>();
+        for(int i = 0; i < nJogadas; ++i)
+            anteriores.push(stackUndo.pop());
+        System.out.println("Anteriores = " + anteriores.size() + "\nStack = " + stackUndo.size());
+        Memento anterior = anteriores.pop();
+        if(!originator.setMemento(anterior, nJogadas)) {
+            anteriores.push(anterior);
+            for(int i = 0; i < anteriores.size(); ++i)
+                stackUndo.push(anteriores.pop());
+        }
     }
 
-    // todo: reset -> quando o jogo da reset o memento (design) tambem da reset
+    public void reset() {
+        stackUndo.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "CareTaker{" +
+                "stackUndo=" + stackUndo.size() +
+                '}';
+    }
 }
