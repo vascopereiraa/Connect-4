@@ -19,11 +19,20 @@ public abstract class Player implements Serializable {
 
     public Peca getPeca() { return peca; }
 
-    public boolean jogaPecaEspecial() { return false; };
+    public boolean jogaPecaEspecial() { return false; }
 
     public boolean usaCreditos(int creditos) { return false; }
 
     public void setCreditos(int creditos) { }
 
     public int getCreditos() { return 0; }
+
+    public void ganhaPecaEspecial() { }
+
+    @Override
+    public String toString() {
+        return "Jogador: " + nome +
+                "\nPeça: " + peca.toString();
+    }
 }
+

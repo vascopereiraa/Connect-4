@@ -1,13 +1,11 @@
 package pt.isec.a2019134744.jogo.logica.memento;
 
-import pt.isec.a2019134744.jogo.logica.GestorDeJogo;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class CareTaker {
     private final IMementoOriginator originator;
-    private Deque<Memento> stackUndo = new ArrayDeque<>();
+    private final Deque<Memento> stackUndo = new ArrayDeque<>();
 
     public CareTaker(IMementoOriginator originator) {
         this.originator = originator;
@@ -17,31 +15,23 @@ public class CareTaker {
         stackUndo.push(originator.getMemento());
     }
 
-    // todo: Momento em que é verificado se é humano e se tem creditos suficientes para andar para tras
     public void undo(int nJogadas) {
-        if(stackUndo.size() < nJogadas)
+        if (stackUndo.size() < nJogadas)
             return;
 
         Deque<Memento> anteriores = new ArrayDeque<>();
-        for(int i = 0; i < nJogadas; ++i)
+        for (int i = 0; i < nJogadas; ++i)
             anteriores.push(stackUndo.pop());
-        System.out.println("Anteriores = " + anteriores.size() + "\nStack = " + stackUndo.size());
+//        System.out.println("Anteriores = " + anteriores.size() + "\nStack = " + stackUndo.size());
         Memento anterior = anteriores.pop();
-        if(!originator.setMemento(anterior, nJogadas)) {
+        if (!originator.setMemento(anterior, nJogadas)) {
             anteriores.push(anterior);
-            for(int i = 0; i < anteriores.size(); ++i)
+            for (int i = 0; i < anteriores.size(); ++i)
                 stackUndo.push(anteriores.pop());
         }
     }
 
     public void reset() {
         stackUndo.clear();
-    }
-
-    @Override
-    public String toString() {
-        return "CareTaker{" +
-                "stackUndo=" + stackUndo.size() +
-                '}';
     }
 }

@@ -35,7 +35,9 @@ public class UIConnect4 {
     }
 
     private void uiFimJogo() {
-        System.out.println(ConsoleColors.BLUE + "Fim de Jogo" + ConsoleColors.RESET);
+        System.out.println("\n" + ConsoleColors.BLUE + "Fim de Jogo" + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo.getInfoJogo());
+        System.out.println("\nTabuleiro Final:" + gestorDeJogo.getTabuleiro());
         switch (Util.escolheOpcao("Recomecar", "Sair")) {
             case 1 -> gestorDeJogo.recomeca();
             case 0 -> sair = true;
@@ -43,14 +45,14 @@ public class UIConnect4 {
     }
 
     private void uiJogaMinijogo() {
-        System.out.println(gestorDeJogo.getPerguntaMinijogo());
-        System.out.println(gestorDeJogo.setRespostaMinijogo(sc));
-        gestorDeJogo.terminaMinijogo();
+        System.out.println("\n" + gestorDeJogo.getPerguntaMinijogo());
+        gestorDeJogo.respondeMinijogo(sc);
+        System.out.println(gestorDeJogo.getResultadoJogo());
     }
 
     private void uiDecisaoMinijogo() {
-        System.out.println(ConsoleColors.BLUE + "Decisao do Minijogo" + ConsoleColors.RESET);
-        System.out.println(gestorDeJogo);
+        System.out.println("\n" + ConsoleColors.BLUE + "Decisao do Minijogo" + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo.getInfoJogo());
         switch (Util.escolheOpcao("Jogar o minijogo", "Desistir do minijogo")) {
             case 1 -> gestorDeJogo.jogaMinijogo();
             case 0 -> gestorDeJogo.desisteMinijogo();
@@ -58,21 +60,26 @@ public class UIConnect4 {
     }
 
     private void uiAguardaJogada() {
-        System.out.println(ConsoleColors.BLUE + "Aguarda Jogada" + ConsoleColors.RESET);
-        // System.out.println(gestorDeJogo.getInfoJogo());
-        System.out.println(gestorDeJogo);
-        System.out.println(gestorDeJogo.getTabuleiro());
-        System.out.println(" ");
+        System.out.println("\n" + ConsoleColors.BLUE + "Aguarda Jogada" + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.GREEN + "Jogador Humano" + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo.getInfoJogo());
         switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Desistir")) {
             case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
             case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
             case 3 -> gestorDeJogo.undo(Util.pedeInteiro("Numero de jogadas a reverter: "));
+            case 4 -> System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro de SAVE: ")));
             case 0 -> gestorDeJogo.termina();
         }
+        System.out.println("\n" + ConsoleColors.YELLOW + gestorDeJogo.getResultadoJogo() + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo.getTabuleiro());
+        System.out.println("..Presssione [ENTER] para continuar..");
+        sc.nextLine();
+        System.console().flush();
+        System.console().flush();
     }
 
     private void uiAguardaJogadores() {
-        System.out.println(ConsoleColors.BLUE + "Aguarda Jogadores" + ConsoleColors.RESET);
+        System.out.println("\n" + ConsoleColors.BLUE + "Aguarda Jogadores" + ConsoleColors.RESET);
         switch (Util.escolheOpcao("Comecar Jogo", "Recomecar")) {
             case 1 -> {
                 System.out.println("Introduza os nomes dos jogadores: ");
@@ -91,13 +98,13 @@ public class UIConnect4 {
     }
 
     private void jogaVirtual() {
-        System.out.println(gestorDeJogo.getSituacao());
-        System.out.println(ConsoleColors.BLUE + "Jogador Virtual" + ConsoleColors.RESET);
-        System.out.println(gestorDeJogo);
+        System.out.println("\n" + ConsoleColors.BLUE + gestorDeJogo.getSituacao() + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.GREEN + "Jogador Virtual" + ConsoleColors.RESET);
+        System.out.println(gestorDeJogo.getInfoJogo());
         int random = (int) (Math.random() * 7) + 1;
         System.out.println(gestorDeJogo.getNomeJogador() + ": Vou jogar uma peça na coluna " + random);
         gestorDeJogo.joga(random);
-        System.out.println(gestorDeJogo.getTabuleiro());
+        System.out.println("\n" + ConsoleColors.YELLOW + gestorDeJogo.getResultadoJogo() + ConsoleColors.RESET);
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
     }

@@ -44,7 +44,6 @@ public class JogoCalculos implements IJogo {
             return String.format("Resposta Certa!\nJá acertou em %d questões e passaram-se %d segundos\n",
                     nAcertos, (System.currentTimeMillis() - start) / 1000);
         }
-
         if(nAcertos != 0)
             return String.format("Resposta Incorreta!\nJá acertou em %d questões e passaram-se %d segundos\n",
                     nAcertos, (System.currentTimeMillis() - start) / 1000);

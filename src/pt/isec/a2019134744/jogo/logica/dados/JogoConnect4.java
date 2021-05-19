@@ -9,12 +9,15 @@ import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoCalculos;
 import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoPalavras;
 import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
+import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 
 import java.io.Serializable;
-import java.util.Deque;
 import java.util.Scanner;
 
 public class JogoConnect4 implements IMementoOriginator, Serializable {
+
+    // Info Jogo
+    private String infoJogo;
 
     // Dados Jogadores
     private Player jogador1;
@@ -29,6 +32,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     private final IJogo jogoCalculos;
     private final IJogo jogoPalavras;
     private IJogo jogoAtivo;
+    private boolean isMinijogoDecorrer;
 
     public JogoConnect4() {
         this.tabuleiro = new Tabuleiro();
@@ -44,6 +48,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         jogadorAtivo = JogadorAtivo.none;
         isJogoTerminado = false;
         jogoAtivo = jogoCalculos;
+        isMinijogoDecorrer = false;
     }
 
     // Apenas sao pedidos os nomes dos jogadores humanos
@@ -61,6 +66,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogadorAtivo = JogadorAtivo.jogador1;
         else
             jogadorAtivo = JogadorAtivo.jogador2;
+
         return true;
     }
 
@@ -94,22 +100,30 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     public boolean jogaPeca(int nColuna) {
         // Consegue jogar peça
-        // Se for humano vai incrementar contador de jogada
-        if(isHumano()) {
-            Humano a = (Humano) getJogadorAtivo();
-            a.incNJogada();
+        if(tabuleiro.introduzPeca(nColuna, getJogadorAtivo().getPeca())) {
+            // Se for humano vai incrementar contador de jogada
+            if (isHumano())
+                ((Humano) getJogadorAtivo()).incNJogada();
+            infoJogo = (String.format("Foi introduzida uma peça " + getJogadorAtivo().getPeca().toString() +
+                            " na posicao %d", nColuna));
+            return true;
         }
-
         // Nao conseguiu jogar a peça -> pede novamente
-        return tabuleiro.introduzPeca(nColuna, getJogadorAtivo().getPeca());
+        infoJogo = "Tentou introduzir uma peça " + getJogadorAtivo().getPeca().toString() +
+                " numa posição inválida!";
+
+        return false;
     }
 
     public boolean jogaPecaEspecial(int nColuna) {
         if(!getJogadorAtivo().jogaPecaEspecial())
             return false;
-        if(!tabuleiro.removeColuna(nColuna))
+        if(!tabuleiro.removeColuna(nColuna)) {
+            getJogadorAtivo().ganhaPecaEspecial();
             return false;
-        switchJogadorAtivo();
+        }
+        if (isHumano())
+            ((Humano) getJogadorAtivo()).incNJogada();
         return true;
     }
 
@@ -130,6 +144,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public void desiste() {
+        infoJogo = String.format("O jogador %s desistiu... ;-;\n", getJogadorAtivo().getNome());
         isJogoTerminado = true;
         switchJogadorAtivo();   // Jogador que ganhou é o ativo
     }
@@ -142,15 +157,15 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("JogoConnect4 = {jogadorAtivo=" + getJogadorAtivo().getNome());
-        if(isHumano())
-            sb.append(String.format(", creditos=%d, njogadas=%d}}\n", ((Humano) getJogadorAtivo()).getCreditos(), (
-                    (Humano) getJogadorAtivo()).getnJogada()));
-        else
-            sb.append("}}\n");
-
-        return sb.toString();
+        if(isMinijogoDecorrer)
+            return getJogadorAtivo().toString() + "\n" + jogoAtivo.toString();
+        if(isJogoTerminado)
+            return "O jogador " + ConsoleColors.GREEN + getJogadorAtivo().getNome() + ConsoleColors.RESET +
+                    " é o grande Vencedor!!";
+        return getJogadorAtivo().toString() + "\n" + imprimeTabuleiroJogo();
     }
+
+    public String getResultadoJogo() { return infoJogo; }
 
     /* Métodos de controlo do Minijogo */
     public void lancaMinijogo() {
@@ -161,16 +176,19 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         return jogoAtivo.getPergunta();
     }
 
-    public String setRespostaMinijogo(Scanner sc) {
-        return jogoAtivo.setResposta(sc);
+    public void setRespostaMinijogo(Scanner sc) {
+        infoJogo = jogoAtivo.setResposta(sc);
     }
 
     public boolean isFinishedMinijogo() {
-        return jogoAtivo.isFinished();
-    }
-
-    public boolean isVencedorMinijogo() {
-        return jogoAtivo.isVencedor();
+        if(jogoAtivo.isFinished()) {
+            if (jogoAtivo.isVencedor())
+                getJogadorAtivo().ganhaPecaEspecial();
+            switchMinijogo();
+            isMinijogoDecorrer = false;
+            return true;
+        }
+        return false;
     }
 
     public void switchMinijogo() {
@@ -180,11 +198,11 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogoAtivo = jogoCalculos;
     }
 
-    public void ganhaPecaEspecial() {
-        Humano a = (Humano) getJogadorAtivo();
-        a.ganhaPecaEspecial();
+    public void switchMinijogoExecucao() {
+        isMinijogoDecorrer = !isMinijogoDecorrer;
     }
 
+    /* METODOS PARA A FUNCIONALIDADE DE 'UNDO' */
     @Override
     public Memento getMemento() {
         return new Memento(new Object[] {

@@ -19,6 +19,15 @@ public class Util {
         return valor;
     }
 
+    public static String pedeString(String pergunta) {
+        String resposta;
+        do {
+            System.out.print(pergunta);
+            resposta = sc.nextLine().trim();
+        } while (resposta.isEmpty());
+        return resposta;
+    }
+
     public static int escolheOpcao(String... opcoes) {
         int opcao;
         do {

@@ -8,7 +8,6 @@ import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
 import java.io.Serializable;
-import java.util.Deque;
 import java.util.Scanner;
 
 public class MaquinaEstados implements IMementoOriginator, Serializable {
@@ -34,12 +33,16 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         atual = atual.termina();
     }
 
-    public void joga(int nColuna) {
+    public boolean joga(int nColuna) {
+        IEstado anterior = atual;
         atual = atual.joga(nColuna);
+        return atual != anterior;
     }
 
-    public void jogaEspecial(int nColuna) {
+    public boolean jogaEspecial(int nColuna) {
+        IEstado anterior = atual;
         atual = atual.jogaEspecial(nColuna);
+        return atual != anterior;
     }
 
     public void desisteMinijogo() {
@@ -50,8 +53,8 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         atual = atual.jogaMinijogo();
     }
 
-    public void terminaMinijogo() {
-        atual = atual.terminaMinijogo();
+    public void respondeMinijogo(Scanner sc) {
+        atual = atual.respondeMinijogo(sc);
     }
 
     public void recomeca() {
@@ -67,6 +70,8 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return jogoConnect4.toString();
     }
 
+    public String getResultadoJogo() { return jogoConnect4.getResultadoJogo(); }
+
     public boolean isHumano() { return jogoConnect4.isHumano(); }
 
     public String getTabuleiro() {
@@ -80,9 +85,6 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return jogoConnect4.getPerguntaMinijogo();
     }
 
-    public String setRespostaMinijogo(Scanner sc) {
-        return jogoConnect4.setRespostaMinijogo(sc);
-    }
 
     /* FUNCOES PARA O UNDO */
     @Override
@@ -93,12 +95,5 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
     @Override
     public boolean setMemento(Memento m, int nJogadas) {
         return jogoConnect4.setMemento(m, nJogadas);
-    }
-
-    @Override
-    public String toString() {
-        return "MaquinaEstados{" +
-                "jogoConnect4=" + jogoConnect4 +
-                '}';
     }
 }

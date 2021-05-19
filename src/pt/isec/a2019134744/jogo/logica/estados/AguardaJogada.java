@@ -20,6 +20,7 @@ public class AguardaJogada extends EstadoAdapter {
             super.getJogo().switchJogadorAtivo();
             if((super.getJogo().getNJogadaHumano() % 5) == 0) {
                 // Se for a jogada de um humano lança DecisaoMiniJogo
+                super.getJogo().switchMinijogoExecucao();
                 return new DecisaoMinijogo(super.getJogo());
             }
             // Continua jogo

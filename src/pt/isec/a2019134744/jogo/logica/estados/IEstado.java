@@ -1,5 +1,7 @@
 package pt.isec.a2019134744.jogo.logica.estados;
 
+import java.util.Scanner;
+
 public interface IEstado {
 
     // Transicoes de estado
@@ -10,7 +12,7 @@ public interface IEstado {
     IEstado jogaEspecial(int nColuna);
     IEstado desisteMinijogo();
     IEstado jogaMinijogo();
-    IEstado terminaMinijogo();
+    IEstado respondeMinijogo(Scanner sc);
     IEstado recomeca();
 
     Situacao getSituacao();

@@ -4,4 +4,6 @@ public enum Peca {
     Vermelha,
     Amarela,
     none
+
+    // Peca(String cor) {}
 }

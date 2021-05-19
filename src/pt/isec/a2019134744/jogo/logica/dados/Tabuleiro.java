@@ -40,7 +40,7 @@ public class Tabuleiro implements Serializable {
     }
 
     boolean introduzPeca(int nColuna, Peca peca) {
-        if(!isColunaValida(nColuna))
+        if(isColunaInvalida(nColuna))
             return false;
         for(int i = tab.length - 1; i >= 0; --i)
             if(tab[i][nColuna - 1] == Peca.none) {
@@ -114,15 +114,15 @@ public class Tabuleiro implements Serializable {
     }
 
     public boolean removeColuna(int nColuna) {
-        if(!isColunaValida(nColuna))
+        if(isColunaInvalida(nColuna))
             return false;
         for(int i = 0; i < NR_LINHAS; ++i)
             tab[i][nColuna - 1] = Peca.none;
         return true;
     }
 
-    private boolean isColunaValida(int nColuna) {
-        return !(nColuna - 1 < 0 || nColuna - 1 > NR_COLUNAS);
+    private boolean isColunaInvalida(int nColuna) {
+        return nColuna - 1 < 0 || nColuna - 1 > NR_COLUNAS;
     }
 
 }

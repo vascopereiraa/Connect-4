@@ -11,26 +11,11 @@ public class JogaMinijogo extends EstadoAdapter {
         super.getJogo().lancaMinijogo();
     }
 
-    public String getPerguntaMinijogo() {
-        return super.getJogo().getPerguntaMinijogo();
-    }
-
-    public String setRespostaMinijogo(Scanner sc) {
-        return super.getJogo().setRespostaMinijogo(sc);
-    }
-
     @Override
-    public IEstado terminaMinijogo() {
-        if(super.getJogo().isFinishedMinijogo()) {
-            if(super.getJogo().isVencedorMinijogo()) {
-                super.getJogo().ganhaPecaEspecial();
-                super.getJogo().switchMinijogo();
-                return new AguardaJogada(super.getJogo());
-            }
-            super.getJogo().switchJogadorAtivo();
-            super.getJogo().switchMinijogo();
+    public IEstado respondeMinijogo(Scanner sc) {
+        super.getJogo().setRespostaMinijogo(sc);
+        if(super.getJogo().isFinishedMinijogo())
             return new AguardaJogada(super.getJogo());
-        }
         return this;
     }
 

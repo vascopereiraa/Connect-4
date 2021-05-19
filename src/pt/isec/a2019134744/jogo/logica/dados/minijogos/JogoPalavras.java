@@ -11,7 +11,7 @@ public class JogoPalavras implements IJogo {
 
     static {
         PALAVRAS_DATASET = new ArrayList<>();
-        File f = new File("palavras.txt");
+        File f = new File("./res/palavras.txt");
         try (Scanner sc = new Scanner(f)) {
             while (sc.hasNextLine()) {
                 PALAVRAS_DATASET.add(sc.nextLine().toLowerCase());
@@ -75,6 +75,7 @@ public class JogoPalavras implements IJogo {
 
     @Override
     public String setResposta(Scanner sc) {
+        int anterior = nCertas;
         String[] input = sc.nextLine().toLowerCase().split("\\s");
         for(String palavra : input)
             if(palavras.contains(palavra)) {

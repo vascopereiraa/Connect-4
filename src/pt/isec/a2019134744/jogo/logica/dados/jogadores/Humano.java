@@ -46,4 +46,12 @@ public class Humano extends Player {
         this.creditos -= creditos;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\nJogada: " + nJogada +
+                "\nCreditos: " + creditos +
+                "\nPecas Especiais: " + nPecasEspeciais + "\n";
+    }
 }

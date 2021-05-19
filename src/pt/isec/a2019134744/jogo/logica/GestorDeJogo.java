@@ -6,7 +6,7 @@ import pt.isec.a2019134744.jogo.logica.memento.CareTaker;
 import java.util.Scanner;
 
 public class GestorDeJogo {
-    private final MaquinaEstados maquinaEstados;
+    private MaquinaEstados maquinaEstados;
     private final CareTaker careTaker;
 
     public GestorDeJogo() {
@@ -17,10 +17,6 @@ public class GestorDeJogo {
     /* FUNCOES DO CARETAKER */
     public void undo(int nJogadas) {
         careTaker.undo(nJogadas);
-    }
-
-    public void resetUndo() {
-        careTaker.reset();
     }
 
     /* FUNCOES DA MAQUINA DE ESTADOS */
@@ -37,13 +33,13 @@ public class GestorDeJogo {
     }
 
     public void joga(int nColuna) {
-        careTaker.gravaMemento();
-        maquinaEstados.joga(nColuna);
+        if(maquinaEstados.joga(nColuna))
+            careTaker.gravaMemento();
     }
 
     public void jogaEspecial(int nColuna) {
-        careTaker.gravaMemento();
-        maquinaEstados.jogaEspecial(nColuna);
+        if(maquinaEstados.jogaEspecial(nColuna))
+            careTaker.gravaMemento();
     }
 
     public void desisteMinijogo() {
@@ -54,8 +50,8 @@ public class GestorDeJogo {
         maquinaEstados.jogaMinijogo();
     }
 
-    public void terminaMinijogo() {
-        maquinaEstados.terminaMinijogo();
+    public void respondeMinijogo(Scanner sc) {
+        maquinaEstados.respondeMinijogo(sc);
     }
 
     public void recomeca() {
@@ -72,6 +68,8 @@ public class GestorDeJogo {
         return maquinaEstados.getInfoJogo();
     }
 
+    public String getResultadoJogo() { return maquinaEstados.getResultadoJogo(); }
+
     public boolean isHumano() { return maquinaEstados.isHumano(); }
 
     public String getTabuleiro() {
@@ -85,15 +83,9 @@ public class GestorDeJogo {
         return maquinaEstados.getPerguntaMinijogo();
     }
 
-    public String setRespostaMinijogo(Scanner sc) {
-        return maquinaEstados.setRespostaMinijogo(sc);
-    }
-
-    @Override
-    public String toString() {
-        return "GestorDeJogo{" +
-                careTaker + "\n" +
-                maquinaEstados +
-                '}';
+    /* FUNCOES DE SAVES */
+    public String gravaJogo(String fich) {
+        
+        return "Aguarde!";
     }
 }

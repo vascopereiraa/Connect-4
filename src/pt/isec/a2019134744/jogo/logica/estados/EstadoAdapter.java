@@ -3,6 +3,7 @@ package pt.isec.a2019134744.jogo.logica.estados;
 import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 
 import java.io.Serializable;
+import java.util.Scanner;
 
 public abstract class EstadoAdapter implements IEstado, Serializable {
 
@@ -48,7 +49,7 @@ public abstract class EstadoAdapter implements IEstado, Serializable {
     }
 
     @Override
-    public IEstado terminaMinijogo() {
+    public IEstado respondeMinijogo(Scanner sc) {
         return this;
     }
 
