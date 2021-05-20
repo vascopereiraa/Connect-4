@@ -32,10 +32,10 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     private boolean isJogoTerminado;
 
     // Minijogos
-    private final IJogo jogoCalculos;
-    private final IJogo jogoPalavras;
-    private IJogo jogoAtivo;
-    private boolean isMinijogoDecorrer;
+    private transient final IJogo jogoCalculos;
+    private transient final IJogo jogoPalavras;
+    private transient IJogo jogoAtivo;
+    private transient boolean isMinijogoDecorrer;
 
     public JogoConnect4() {
         this.infoReplay = new ArrayList<>();

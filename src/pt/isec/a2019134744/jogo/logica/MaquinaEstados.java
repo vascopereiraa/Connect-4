@@ -7,14 +7,19 @@ import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Scanner;
 
 public class MaquinaEstados implements IMementoOriginator, Serializable {
 
+    // Versao da Serializacao
+    @Serial
+    private static final long serialVersionUID = 1;
+
     private IEstado atual;
-    private JogoConnect4 jogoConnect4;
+    private final JogoConnect4 jogoConnect4;
 
     public MaquinaEstados() {
         this.jogoConnect4 = new JogoConnect4();

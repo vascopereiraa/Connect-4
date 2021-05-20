@@ -9,3 +9,5 @@
 
 # Pasta de compilação
 /out/*
+/res/saves/
+/res/replays/

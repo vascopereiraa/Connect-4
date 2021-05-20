@@ -70,11 +70,11 @@ public class UIConnect4 {
         System.out.println("\n" + ConsoleColors.BLUE + "Aguarda Jogada" + ConsoleColors.RESET);
         System.out.println(ConsoleColors.GREEN + "Jogador Humano" + ConsoleColors.RESET);
         System.out.println(gestorDeJogo.getInfoJogo());
-        switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Desistir")) {
+        switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Gravar jogo","Desistir")) {
             case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
             case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
             case 3 -> gestorDeJogo.undo(Util.pedeInteiro("Numero de jogadas a reverter: "));
-            case 4 -> System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro de SAVE: ")));
+            case 4 -> System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")));
             case 0 -> gestorDeJogo.termina();
         }
         System.out.println("\n" + ConsoleColors.YELLOW + gestorDeJogo.getResultadoJogo() + ConsoleColors.RESET);
@@ -96,9 +96,10 @@ public class UIConnect4 {
 
     private void uiInicio() {
         System.out.println(ConsoleColors.BLUE + "Inicio" + ConsoleColors.RESET);
-        switch (Util.escolheOpcao("Começar", "Ver o replay de um jogo anterior", "Sair")) {
+        switch (Util.escolheOpcao("Começar", "Ver o replay de um jogo anterior", "Carregar um jogo", "Sair")) {
             case 1 -> gestorDeJogo.comeca();
             case 2 -> verReplay();
+            case 3 -> gestorDeJogo.carregaJogo(Util.pedeString("Nome do ficheiro: "));
             case 0 -> sair = true;
         }
     }
