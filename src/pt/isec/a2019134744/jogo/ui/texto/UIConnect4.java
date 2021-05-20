@@ -4,6 +4,7 @@ import pt.isec.a2019134744.jogo.logica.GestorDeJogo;
 import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 import pt.isec.a2019134744.jogo.utils.Util;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class UIConnect4 {
@@ -39,8 +40,14 @@ public class UIConnect4 {
         System.out.println(gestorDeJogo.getInfoJogo());
         System.out.println("\nTabuleiro Final:" + gestorDeJogo.getTabuleiro());
         switch (Util.escolheOpcao("Recomecar", "Sair")) {
-            case 1 -> gestorDeJogo.recomeca();
-            case 0 -> sair = true;
+            case 1 -> {
+                gestorDeJogo.gravaReplay();
+                gestorDeJogo.recomeca();
+            }
+            case 0 -> {
+                gestorDeJogo.gravaReplay();
+                sair = true;
+            }
         }
     }
 
@@ -74,8 +81,6 @@ public class UIConnect4 {
         System.out.println(gestorDeJogo.getTabuleiro());
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
-        System.console().flush();
-        System.console().flush();
     }
 
     private void uiAguardaJogadores() {
@@ -91,8 +96,9 @@ public class UIConnect4 {
 
     private void uiInicio() {
         System.out.println(ConsoleColors.BLUE + "Inicio" + ConsoleColors.RESET);
-        switch (Util.escolheOpcao("Começar", "Sair")) {
+        switch (Util.escolheOpcao("Começar", "Ver o replay de um jogo anterior", "Sair")) {
             case 1 -> gestorDeJogo.comeca();
+            case 2 -> verReplay();
             case 0 -> sair = true;
         }
     }
@@ -105,6 +111,43 @@ public class UIConnect4 {
         System.out.println(gestorDeJogo.getNomeJogador() + ": Vou jogar uma peça na coluna " + random);
         gestorDeJogo.joga(random);
         System.out.println("\n" + ConsoleColors.YELLOW + gestorDeJogo.getResultadoJogo() + ConsoleColors.RESET);
+        System.out.println("..Presssione [ENTER] para continuar..");
+        sc.nextLine();
+    }
+
+    private void verReplay() {
+        System.out.println("\n" + ConsoleColors.BLUE + "Ver Replay de um Jogo" + ConsoleColors.RESET);
+        System.out.println("Lista de replays guardados: ");
+        List<String> ficheiros = gestorDeJogo.getListaReplays();
+        ficheiros.remove(ficheiros.size() - 1);
+        int i = 1;
+        for(String s : ficheiros) {
+            System.out.println(i + " - " + s);
+            i++;
+        }
+
+        int num;
+        do {
+            num = Util.pedeInteiro("Introduza o numero do ficheiro que prentende carregar: ");
+        } while(num < 1 || num > ficheiros.size());
+
+        
+        List<String> replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
+        if(replay == null)
+            return;
+        i = 0;
+        while(i < replay.size()) {
+            String frase = replay.get(i);
+            if ("espera".equalsIgnoreCase(frase)) {
+                System.out.println("..Presssione [ENTER] para continuar..");
+                sc.nextLine();
+            } else {
+                System.out.println(frase);
+            }
+            ++i;
+        }
+
+        System.out.println("FIM DO REPLAY");
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
     }

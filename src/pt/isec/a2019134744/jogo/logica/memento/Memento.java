@@ -1,6 +1,5 @@
 package pt.isec.a2019134744.jogo.logica.memento;
 
-import javax.print.attribute.standard.RequestingUserName;
 import java.io.*;
 
 public class Memento {

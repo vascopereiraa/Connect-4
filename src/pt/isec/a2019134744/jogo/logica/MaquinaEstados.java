@@ -8,6 +8,7 @@ import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Scanner;
 
 public class MaquinaEstados implements IMementoOriginator, Serializable {
@@ -79,6 +80,8 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
     }
 
     public String getNomeJogador() { return jogoConnect4.getNomeJogador(); }
+
+    public List<String> getReplay() { return jogoConnect4.getReplay(); }
 
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
