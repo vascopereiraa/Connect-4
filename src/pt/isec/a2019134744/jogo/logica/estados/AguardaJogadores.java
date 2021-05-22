@@ -12,9 +12,6 @@ public class AguardaJogadores extends EstadoAdapter implements Serializable {
 
     @Override
     public IEstado comeca(String... jogadores) {
-        // verifica se os nomes sao iguais -> se forem manda para trás
-        if(jogadores.length == 2 && jogadores[0].equalsIgnoreCase(jogadores[1]))
-            return this;
         super.getJogo().resetJogo();
         if(!super.getJogo().comecaJogo(jogadores))
             return this;

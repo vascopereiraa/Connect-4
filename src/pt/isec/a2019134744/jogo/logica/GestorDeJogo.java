@@ -67,7 +67,10 @@ public class GestorDeJogo {
     }
 
     public Situacao getSituacao() {
-        return maquinaEstados.getSituacao();
+        Situacao situacao = maquinaEstados.getSituacao();
+        if (situacao == Situacao.FimJogo)
+            gravaReplay();
+        return situacao;
     }
 
     /* FUNCOES DO JOGO */

@@ -38,16 +38,9 @@ public class UIConnect4 {
     private void uiFimJogo() {
         System.out.println("\n" + ConsoleColors.BLUE + "Fim de Jogo" + ConsoleColors.RESET);
         System.out.println(gestorDeJogo.getInfoJogo());
-        System.out.println("\nTabuleiro Final:" + gestorDeJogo.getTabuleiro());
         switch (Util.escolheOpcao("Recomecar", "Sair")) {
-            case 1 -> {
-                gestorDeJogo.gravaReplay();
-                gestorDeJogo.recomeca();
-            }
-            case 0 -> {
-                gestorDeJogo.gravaReplay();
-                sair = true;
-            }
+            case 1 -> gestorDeJogo.recomeca();
+            case 0 -> sair = true;
         }
     }
 
@@ -93,11 +86,28 @@ public class UIConnect4 {
         System.out.println("\n" + ConsoleColors.BLUE + "Aguarda Jogadores" + ConsoleColors.RESET);
         switch (Util.escolheOpcao("Comecar Jogo", "Recomecar")) {
             case 1 -> {
-                System.out.println("Introduza os nomes dos jogadores: ");
+                System.out.print("""
+                
+                Modos de jogo:
+                 - 1 vs 1
+                 - 1 vs Computador
+                 - Computador vs Computador
+                
+                Nota: Apenas introduza o nome dos jogadores, não do computador!
+                Nomes:""" + " ");
                 gestorDeJogo.comeca(sc.nextLine().split("\\s"));
             }
             case 0 -> gestorDeJogo.recomeca();
         }
+        String contexto = gestorDeJogo.getResultadoJogo();
+        if(contexto.charAt(0) != ' ') {
+            System.out.println("\n" + contexto);
+            System.out.println("..Presssione [ENTER] para iniciar o jogo..");
+            sc.nextLine();
+        }
+        else
+            System.out.println("\n" + contexto.substring(1));
+
     }
 
     private void uiInicio() {
@@ -168,6 +178,8 @@ public class UIConnect4 {
         }
 
         System.out.println("""
+                        
+                        
                         FIM DO REPLAY
             ..Presssione [ENTER] para continuar..
             """);

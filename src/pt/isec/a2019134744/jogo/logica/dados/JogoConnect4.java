@@ -56,15 +56,25 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     // Apenas sao pedidos os nomes dos jogadores humanos
     public boolean comecaJogo(String... jogadores) {
-        if(jogadores.length > 2)
+        // Verifica o numero de nomes de jogador
+        if(jogadores.length > 2) {
+            infoJogo = " Numero de jogadores inválido!";
             return false;
-        if(jogadores[0].equalsIgnoreCase(""))
-            adicionaJogadores();
-        else
-            switch(jogadores.length) {
-                case 1 -> adicionaJogadores(jogadores[0]);
-                case 2 -> adicionaJogadores(jogadores[0], jogadores[1]);
+        }
+
+        // Verifica se os nomes sao iguais -> se forem manda para trás
+        if(jogadores.length == 2 && jogadores[0].equalsIgnoreCase(jogadores[1])) {
+            infoJogo = " Os nomes introduzidos são iguais!\nIntroduza nomes diferentes para os 2 jogadores";
+            return false;
+        }
+
+        switch(jogadores.length) {
+            case 1 -> {
+                if (jogadores[0].equalsIgnoreCase("")) adicionaJogadores();
+                else adicionaJogadores(jogadores[0]);
             }
+            case 2 -> adicionaJogadores(jogadores[0], jogadores[1]);
+        }
 
         // Sortear o primeiro jogador
         int random = (int) (Math.random() * 2) + 1;
@@ -80,21 +90,27 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         this.jogador1 = new Humano(jogador1, Peca.Vermelha);
         this.jogador2 = new Humano(jogador2, Peca.Amarela);
 
-        infoReplay.add(ConsoleColors.PURPLE + "2 Jogadores Humanos:\n" + ConsoleColors.RESET + this.jogador1 + "\n" + this.jogador2 + "\n");
+        infoJogo = ConsoleColors.PURPLE + "2 Jogadores Humanos:\n" + ConsoleColors.RESET + this.jogador1 + "\n" + this.jogador2 + "\n";
+        infoReplay.add(infoJogo);
+        infoReplay.add("\nEspera\n");
     }
 
     private void adicionaJogadores(String jogador1) {
         this.jogador1 = new Humano(jogador1, Peca.Vermelha);
         this.jogador2 = new Virtual(2, Peca.Amarela);
 
-        infoReplay.add("1 Jogador Humano e 1 Jogador Virtual:\n" + this.jogador1 + "\n\n" + this.jogador2 + "\n");
+        infoJogo = ConsoleColors.PURPLE + "1 Jogador Humano e 1 Jogador Virtual:\n" + ConsoleColors.RESET + this.jogador1 + "\n\n" + this.jogador2 + "\n";
+        infoReplay.add(infoJogo);
+        infoReplay.add("\nEspera\n");
     }
 
     private void adicionaJogadores() {
         this.jogador1 = new Virtual(1, Peca.Vermelha);
         this.jogador2 = new Virtual(2, Peca.Amarela);
 
-        infoReplay.add("2 Jogadores Virtuais:\n" + this.jogador1 + "\n\n" + this.jogador2 + "\n");
+        infoJogo = ConsoleColors.PURPLE + "2 Jogadores Virtuais:\n" + ConsoleColors.RESET + this.jogador1 + "\n\n" + this.jogador2 + "\n";
+        infoReplay.add(infoJogo);
+        infoReplay.add("\nEspera\n");
     }
 
     public void switchJogadorAtivo() {
@@ -174,9 +190,9 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     public void desiste() {
         infoJogo = String.format("O jogador " + ConsoleColors.GREEN + "%s" + ConsoleColors.RESET +
-                " desistiu... ;-;\n%s", getJogadorAtivo().getNome(), imprimeTabuleiroJogo());
+                " desistiu... ;-;\n%s\n\n", getJogadorAtivo().getNome(), imprimeTabuleiroJogo());
         infoReplay.add(infoJogo);
-        infoReplay.add("\nespera\n");
+        // infoReplay.add("\nespera\n");
         isJogoTerminado = true;
         switchJogadorAtivo();   // Jogador que ganhou é o ativo
     }
@@ -197,11 +213,11 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             return getJogadorAtivo().toString() + "\n" + jogoAtivo.toString();
         String feedback;
         if(isJogoTerminado) {
-            feedback = String.format("O jogador " +
-                    ConsoleColors.GREEN + getJogadorAtivo().getNome() + ConsoleColors.RESET +
-                    " é o grande Vencedor!!\n%s", imprimeTabuleiroJogo());
+            feedback = String.format(ConsoleColors.PURPLE + "O jogador " +
+                    ConsoleColors.GREEN + getJogadorAtivo().getNome() + ConsoleColors.PURPLE +
+                    " é o grande Vencedor!!\n"+ ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
             infoReplay.add(feedback);
-            infoReplay.add("\nespera\n");
+            // infoReplay.add("\nespera\n");
             return feedback;
         }
         infoReplay.add("\n" + ConsoleColors.GREEN + "Jogador Ativo:\n" + ConsoleColors.RESET);

@@ -1,6 +1,7 @@
 package pt.isec.a2019134744.jogo.logica.dados.jogadores;
 
 import pt.isec.a2019134744.jogo.logica.dados.Peca;
+import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 
 import java.io.Serializable;
 
@@ -31,8 +32,8 @@ public abstract class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "Jogador: " + nome +
-                "\nPeça: " + peca.toString() +
+        return "Jogador: " + ConsoleColors.CYAN + nome + ConsoleColors.RESET +
+                "\nPeça: " + peca.getString() +
                 "\n";
     }
 }
