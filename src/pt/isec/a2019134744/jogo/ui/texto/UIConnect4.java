@@ -69,16 +69,22 @@ public class UIConnect4 {
     private void uiAguardaJogada() {
         System.out.println("\n" + ConsoleColors.BLUE + "Aguarda Jogada" + ConsoleColors.RESET);
         System.out.println(ConsoleColors.GREEN + "Jogador Humano" + ConsoleColors.RESET);
-        System.out.println(gestorDeJogo.getInfoJogo());
-        switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Gravar jogo","Desistir")) {
-            case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
-            case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
-            case 3 -> gestorDeJogo.undo(Util.pedeInteiro("Numero de jogadas a reverter: "));
-            case 4 -> System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")));
-            case 0 -> gestorDeJogo.termina();
-        }
-        System.out.println("\n" + ConsoleColors.YELLOW + gestorDeJogo.getResultadoJogo() + ConsoleColors.RESET);
+        System.out.print(gestorDeJogo.getInfoJogo());
         System.out.println(gestorDeJogo.getTabuleiro());
+        boolean keep = true;
+        do {
+            switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Gravar jogo", "Desistir")) {
+                case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
+                case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
+                case 3 -> gestorDeJogo.undo(Util.pedeInteiro("Numero de jogadas a reverter: "));
+                case 4 -> {
+                    System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
+                    keep = false;
+                }
+                case 0 -> gestorDeJogo.termina();
+            }
+        } while(!keep);
+        System.out.println("\n" + gestorDeJogo.getResultadoJogo());
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
     }
@@ -97,9 +103,9 @@ public class UIConnect4 {
     private void uiInicio() {
         System.out.println(ConsoleColors.BLUE + "Inicio" + ConsoleColors.RESET);
         switch (Util.escolheOpcao("Começar", "Ver o replay de um jogo anterior", "Carregar um jogo", "Sair")) {
-            case 1 -> gestorDeJogo.comeca();
+            case 1 -> gestorDeJogo.inicia();
             case 2 -> verReplay();
-            case 3 -> gestorDeJogo.carregaJogo(Util.pedeString("Nome do ficheiro: "));
+            case 3 -> System.out.println(gestorDeJogo.carregaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
             case 0 -> sair = true;
         }
     }
@@ -111,7 +117,7 @@ public class UIConnect4 {
         int random = (int) (Math.random() * 7) + 1;
         System.out.println(gestorDeJogo.getNomeJogador() + ": Vou jogar uma peça na coluna " + random);
         gestorDeJogo.joga(random);
-        System.out.println("\n" + ConsoleColors.YELLOW + gestorDeJogo.getResultadoJogo() + ConsoleColors.RESET);
+        System.out.println("\n" + gestorDeJogo.getResultadoJogo());
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
     }
@@ -120,12 +126,21 @@ public class UIConnect4 {
         System.out.println("\n" + ConsoleColors.BLUE + "Ver Replay de um Jogo" + ConsoleColors.RESET);
         System.out.println("Lista de replays guardados: ");
         List<String> ficheiros = gestorDeJogo.getListaReplays();
-        ficheiros.remove(ficheiros.size() - 1);
-        int i = 1;
-        for(String s : ficheiros) {
-            System.out.println(i + " - " + s);
-            i++;
+
+        if(ficheiros.size() == 0) {
+            System.out.println("""
+            Não existe nenhum replay guardado!
+            ..Presssione [ENTER] para continuar..
+            """);
+            sc.nextLine();
+            return ;
         }
+
+        // Remove item mais antigo da pasta _> Este está sempre na ult. pos.
+        ficheiros.remove(ficheiros.size() - 1);
+
+        for(int i = 0; i < ficheiros.size(); ++i)
+            System.out.println((i + 1) + " - " + ficheiros.get(i));
 
         int num;
         do {
@@ -136,20 +151,26 @@ public class UIConnect4 {
         List<String> replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
         if(replay == null)
             return;
-        i = 0;
+        int i = 0;
         while(i < replay.size()) {
             String frase = replay.get(i);
             if ("espera".equalsIgnoreCase(frase)) {
-                System.out.println("..Presssione [ENTER] para continuar..");
-                sc.nextLine();
+                System.out.println( """
+                        ..Presssione [ENTER] para continuar..
+                          -> Insira 'sair' para terminar o replay
+                        """);
+                if(sc.nextLine().equalsIgnoreCase("sair"))
+                    break;
             } else {
                 System.out.println(frase);
             }
             ++i;
         }
 
-        System.out.println("FIM DO REPLAY");
-        System.out.println("..Presssione [ENTER] para continuar..");
+        System.out.println("""
+                        FIM DO REPLAY
+            ..Presssione [ENTER] para continuar..
+            """);
         sc.nextLine();
     }
 }

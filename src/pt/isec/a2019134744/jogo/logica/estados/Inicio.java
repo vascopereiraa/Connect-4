@@ -9,7 +9,7 @@ public class Inicio extends EstadoAdapter {
     }
 
     @Override
-    public IEstado comeca() {
+    public IEstado inicia() {
         return new AguardaJogadores(super.getJogo());
     }
 

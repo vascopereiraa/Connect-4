@@ -5,7 +5,7 @@ import java.util.Scanner;
 public interface IEstado {
 
     // Transicoes de estado
-    IEstado comeca();
+    IEstado inicia();
     IEstado comeca(String... jogadores);
     IEstado termina();
     IEstado joga(int nColuna);

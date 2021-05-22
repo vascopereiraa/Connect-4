@@ -6,10 +6,7 @@ import pt.isec.a2019134744.jogo.logica.memento.CareTaker;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class GestorDeJogo {
 
@@ -30,8 +27,8 @@ public class GestorDeJogo {
     }
 
     /* FUNCOES DA MAQUINA DE ESTADOS */
-    public void comeca() {
-        maquinaEstados.comeca();
+    public void inicia() {
+        maquinaEstados.inicia();
     }
 
     public void comeca(String... jogadores) {
@@ -98,6 +95,9 @@ public class GestorDeJogo {
         List<String> lista = new ArrayList<>();
         File dir = new File(REPLAYS_PATH);
 
+        if(!dir.exists())
+            return lista;
+
         String older = "";
         long lastMod = Long.MAX_VALUE;
         for(File f : Objects.requireNonNull(dir.listFiles())) {
@@ -109,6 +109,8 @@ public class GestorDeJogo {
                 }
             }
         }
+
+        Collections.sort(lista);
 
         lista.add(older);
         return lista;
@@ -167,19 +169,24 @@ public class GestorDeJogo {
         if(!pasta.exists()) {
             boolean ig = pasta.mkdirs();
         }
+
+        if(nomeSave.toLowerCase().contains("."))
+            nomeSave = nomeSave.split("\\.")[0];
+
+
         File f = new File(SAVES_PATH + "/" + nomeSave + ".dat");
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
 
             oos.writeObject(maquinaEstados);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            return "Nao foi possivel efetuar a gravação do jogo";
         }
 
-        return "Aguarde!";
+        return "Jogo gravado com o nome " + nomeSave + " com sucesso!";
     }
 
-    public void carregaJogo(String nomeSave) {
+    public String carregaJogo(String nomeSave) {
 
         File f = new File(SAVES_PATH + "/" + nomeSave + ".dat");
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
@@ -189,7 +196,9 @@ public class GestorDeJogo {
                 careTaker.reset();
 
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            return "Não foi possivel carregar o save " + nomeSave + " indicado!";
         }
+
+        return "";
     }
 }

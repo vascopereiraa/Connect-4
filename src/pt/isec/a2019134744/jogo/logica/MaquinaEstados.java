@@ -27,8 +27,8 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
     }
 
     /* FUNCOES DA MAQUINA DE ESTADOS */
-    public void comeca() {
-        atual = atual.comeca();
+    public void inicia() {
+        atual = atual.inicia();
     }
 
     public void comeca(String... jogadores) {

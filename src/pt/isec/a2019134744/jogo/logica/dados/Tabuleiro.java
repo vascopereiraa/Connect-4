@@ -122,7 +122,7 @@ public class Tabuleiro implements Serializable {
     }
 
     private boolean isColunaInvalida(int nColuna) {
-        return nColuna - 1 < 0 || nColuna - 1 > NR_COLUNAS;
+        return nColuna - 1 < 0 || nColuna - 1 >= NR_COLUNAS;
     }
 
 }

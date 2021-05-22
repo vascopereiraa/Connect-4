@@ -32,7 +32,8 @@ public abstract class Player implements Serializable {
     @Override
     public String toString() {
         return "Jogador: " + nome +
-                "\nPeça: " + peca.toString();
+                "\nPeça: " + peca.toString() +
+                "\n";
     }
 }
 

@@ -32,39 +32,40 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     private boolean isJogoTerminado;
 
     // Minijogos
-    private transient final IJogo jogoCalculos;
-    private transient final IJogo jogoPalavras;
+    private transient IJogo jogoCalculos;
+    private transient IJogo jogoPalavras;
     private transient IJogo jogoAtivo;
     private transient boolean isMinijogoDecorrer;
+    private transient int repeatMinijogo;
 
     public JogoConnect4() {
         this.infoReplay = new ArrayList<>();
         this.tabuleiro = new Tabuleiro();
-        this.jogoCalculos = new JogoCalculos();
-        this.jogoPalavras = new JogoPalavras();
+        iniciaMinijogos();
         resetJogo();
     }
 
     public void resetJogo() {
         infoReplay.clear();
         tabuleiro.resetTabuleiro();
+        isJogoTerminado = false;
         jogador1 = null;
         jogador2 = null;
         jogadorAtivo = JogadorAtivo.none;
-        isJogoTerminado = false;
-        jogoAtivo = jogoCalculos;
-        isMinijogoDecorrer = false;
     }
 
     // Apenas sao pedidos os nomes dos jogadores humanos
     public boolean comecaJogo(String... jogadores) {
         if(jogadores.length > 2)
             return false;
-        switch(jogadores.length) {
-            case 0 -> adicionaJogadores();
-            case 1 -> adicionaJogadores(jogadores[0]);
-            default -> adicionaJogadores(jogadores[0], jogadores[1]);
-        }
+        if(jogadores[0].equalsIgnoreCase(""))
+            adicionaJogadores();
+        else
+            switch(jogadores.length) {
+                case 1 -> adicionaJogadores(jogadores[0]);
+                case 2 -> adicionaJogadores(jogadores[0], jogadores[1]);
+            }
+
         // Sortear o primeiro jogador
         int random = (int) (Math.random() * 2) + 1;
         if(random == 1)
@@ -115,15 +116,15 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             // Se for humano vai incrementar contador de jogada
             if (isHumano())
                 ((Humano) getJogadorAtivo()).incNJogada();
-            infoJogo = (String.format("Foi introduzida uma peça " + getJogadorAtivo().getPeca().toString() +
-                            " na posicao %d", nColuna));
+            infoJogo = String.format(ConsoleColors.PURPLE + "Foi introduzida uma peça " + getJogadorAtivo().getPeca().toString() +
+                            " na posicao %d\n" + ConsoleColors.RESET + "%s", nColuna, imprimeTabuleiroJogo());
             infoReplay.add(infoJogo);
             infoReplay.add("\nespera\n");
             return true;
         }
         // Nao conseguiu jogar a peça -> pede novamente
-        infoJogo = "Tentou introduzir uma peça " + getJogadorAtivo().getPeca().toString() +
-                " numa posição inválida!";
+        infoJogo = String.format(ConsoleColors.PURPLE + "Tentou introduzir uma peça " + getJogadorAtivo().getPeca().toString() +
+                " numa posição inválida!\n" + ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
         infoReplay.add(infoJogo);
         infoReplay.add("\nespera\n");
 
@@ -131,14 +132,27 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public boolean jogaPecaEspecial(int nColuna) {
-        if(!getJogadorAtivo().jogaPecaEspecial())
+        if(!getJogadorAtivo().jogaPecaEspecial()) {
+            infoJogo = String.format(ConsoleColors.PURPLE + "Tentou jogar uma peça especial na posicao " + nColuna +
+                    " mas nao tem nenhuma peça especial no seu bolso!\n" + ConsoleColors.RESET + "%s",
+                    imprimeTabuleiroJogo());
+            infoReplay.add(infoJogo);
+            infoReplay.add("\nespera\n");
             return false;
+        }
         if(!tabuleiro.removeColuna(nColuna)) {
             getJogadorAtivo().ganhaPecaEspecial();
+            infoJogo = String.format(ConsoleColors.PURPLE + "Nao foi possivel limpar a coluna " + nColuna +
+                            "! A peça especial foi reposta no seu bolso :P\n" + ConsoleColors.RESET + "%s",
+                    imprimeTabuleiroJogo());
             return false;
         }
         if (isHumano())
             ((Humano) getJogadorAtivo()).incNJogada();
+        infoJogo = String.format(ConsoleColors.PURPLE + "Foi jogada uma peça especial na coluna " + nColuna +
+                        " que a deixou vazia!\n" + ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
+        infoReplay.add(infoJogo);
+        infoReplay.add("\nespera\n");
         return true;
     }
 
@@ -159,15 +173,20 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public void desiste() {
-        infoJogo = String.format("O jogador %s desistiu... ;-;\n", getJogadorAtivo().getNome());
+        infoJogo = String.format("O jogador " + ConsoleColors.GREEN + "%s" + ConsoleColors.RESET +
+                " desistiu... ;-;\n%s", getJogadorAtivo().getNome(), imprimeTabuleiroJogo());
         infoReplay.add(infoJogo);
-        infoReplay.add("espera");
+        infoReplay.add("\nespera\n");
         isJogoTerminado = true;
         switchJogadorAtivo();   // Jogador que ganhou é o ativo
     }
 
     public boolean isHumano() {
         return getJogadorAtivo() instanceof Humano;
+    }
+
+    public boolean isHumano(Player jogador) {
+        return jogador instanceof Humano;
     }
 
     public String getNomeJogador() { return getJogadorAtivo().getNome(); }
@@ -178,15 +197,15 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             return getJogadorAtivo().toString() + "\n" + jogoAtivo.toString();
         String feedback;
         if(isJogoTerminado) {
-            feedback = "O jogador " +
+            feedback = String.format("O jogador " +
                     ConsoleColors.GREEN + getJogadorAtivo().getNome() + ConsoleColors.RESET +
-                    " é o grande Vencedor!!";
+                    " é o grande Vencedor!!\n%s", imprimeTabuleiroJogo());
             infoReplay.add(feedback);
-            infoReplay.add("espera");
+            infoReplay.add("\nespera\n");
             return feedback;
         }
         infoReplay.add("\n" + ConsoleColors.GREEN + "Jogador Ativo:\n" + ConsoleColors.RESET);
-        feedback = getJogadorAtivo().toString() + "\n" + imprimeTabuleiroJogo();
+        feedback = getJogadorAtivo().toString() + "\n";
         infoReplay.add(feedback);
         return feedback;
     }
@@ -195,6 +214,8 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     /* Métodos de controlo do Minijogo */
     public void lancaMinijogo() {
+        if(jogoAtivo == null)
+            iniciaMinijogos();
         jogoAtivo.inicializaJogo();
     }
 
@@ -222,10 +243,27 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogoAtivo = jogoPalavras;
         else
             jogoAtivo = jogoCalculos;
+
+        // Garantir que o mesmo minijogo não é jogado 2x pelo msm Humano
+        if(isHumano(jogador1) && isHumano(jogador2)) {
+            repeatMinijogo++;
+            if (repeatMinijogo == 2) {
+                repeatMinijogo = -1;
+                switchMinijogo();
+            }
+        }
     }
 
     public void switchMinijogoExecucao() {
         isMinijogoDecorrer = !isMinijogoDecorrer;
+    }
+
+    private void iniciaMinijogos() {
+        jogoCalculos = new JogoCalculos();
+        jogoPalavras = new JogoPalavras();
+        jogoAtivo = jogoCalculos;
+        isMinijogoDecorrer = false;
+        repeatMinijogo = 0;
     }
 
     /* METODOS PARA A FUNCIONALIDADE DE 'UNDO' */

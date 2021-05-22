@@ -13,8 +13,7 @@ public abstract class EstadoAdapter implements IEstado, Serializable {
         this.jogoConnect4 = jogoConnect4;
     }
 
-    @Override
-    public IEstado comeca() {
+    public IEstado inicia() {
         return this;
     }
 

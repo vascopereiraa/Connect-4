@@ -1,6 +1,7 @@
 package pt.isec.a2019134744.jogo.logica.dados.minijogos;
 
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,7 +13,7 @@ public class JogoPalavras implements IJogo {
     static {
         PALAVRAS_DATASET = new ArrayList<>();
         File f = new File("./res/palavras.txt");
-        try (Scanner sc = new Scanner(f)) {
+        try (Scanner sc = new Scanner(new FileReader(f))) {
             while (sc.hasNextLine()) {
                 PALAVRAS_DATASET.add(sc.nextLine().toLowerCase());
             }

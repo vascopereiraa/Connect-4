@@ -50,7 +50,7 @@ public class Humano extends Player {
     @Override
     public String toString() {
         return super.toString() +
-                "\nJogada: " + nJogada +
+                "Jogada: " + nJogada +
                 "\nCreditos: " + creditos +
                 "\nPecas Especiais: " + nPecasEspeciais + "\n";
     }
