@@ -1,6 +1,5 @@
 package pt.isec.a2019134744.jogo.logica.dados.minijogos;
 
-import java.io.Serializable;
 import java.util.Scanner;
 
 public class JogoCalculos implements IJogo {

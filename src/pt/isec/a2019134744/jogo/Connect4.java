@@ -3,8 +3,6 @@ package pt.isec.a2019134744.jogo;
 import pt.isec.a2019134744.jogo.logica.GestorDeJogo;
 import pt.isec.a2019134744.jogo.ui.texto.UIConnect4;
 
-import java.io.File;
-
 public class Connect4 {
     public static void main(String[] args) {
         GestorDeJogo gestorDeJogo = new GestorDeJogo();
