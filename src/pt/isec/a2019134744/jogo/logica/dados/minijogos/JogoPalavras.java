@@ -9,10 +9,11 @@ import java.util.Scanner;
 public class JogoPalavras implements IJogo {
 
     private static final List<String> PALAVRAS_DATASET;
+    private static final String FILENAME = "."  + File.separator + "res"  + File.separator + "palavras.txt";
 
     static {
         PALAVRAS_DATASET = new ArrayList<>();
-        File f = new File("./res/palavras.txt");
+        File f = new File(FILENAME);
         try (Scanner sc = new Scanner(new FileReader(f))) {
             while (sc.hasNextLine()) {
                 PALAVRAS_DATASET.add(sc.nextLine().toLowerCase());
@@ -24,6 +25,7 @@ public class JogoPalavras implements IJogo {
 
     private List<String> palavras;
     private int maxSegundos;
+    private int tempoRestante;
     private int nCertas;
     private long start;
     private long end;
@@ -54,6 +56,7 @@ public class JogoPalavras implements IJogo {
 
         // Tempo = 1/2 * nr_caracteres (incl. espacos)
         maxSegundos /= 2;
+        tempoRestante = maxSegundos;
     }
 
     private int getRandomNum(int max) {
@@ -63,7 +66,7 @@ public class JogoPalavras implements IJogo {
     @Override
     public String getPergunta() {
         StringBuilder sb = new StringBuilder("Escreva corretamente as seguintes" +
-                " palavras em " + maxSegundos + " segundos:\n");
+                " palavras em " + tempoRestante + " segundos:\n");
 
         for(String palavra : palavras)
             sb.append(palavra).append(" ");
@@ -83,11 +86,13 @@ public class JogoPalavras implements IJogo {
                 palavras.remove(palavra);
                 nCertas++;
             }
+        long tempo = (System.currentTimeMillis() - start) / 1000;
+        tempoRestante = (int) (maxSegundos - tempo);
         if(nCertas != 0)
             return String.format("Ja acertou %d palavras e passaram-se %d segundos\n",
-                    nCertas, (System.currentTimeMillis() - start) / 1000);
+                    nCertas, tempo);
         return String.format("Ainda nao acertou em nenhuma palavra e passaram-se %d " +
-                "segundos\n", (System.currentTimeMillis() - start) / 1000);
+                "segundos\n", tempo);
     }
 
     @Override

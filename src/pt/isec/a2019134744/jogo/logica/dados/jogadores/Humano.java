@@ -16,11 +16,11 @@ public class Humano extends Player {
         this.creditos = 5;
     }
 
-    public int getnJogada() {
+    public int getJogada() {
         return nJogada;
     }
 
-    public void incNJogada() {
+    public void incJogada() {
         ++nJogada;
     }
 

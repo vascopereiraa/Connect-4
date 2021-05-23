@@ -7,5 +7,4 @@ public class Virtual extends Player {
     public Virtual(int nJogador, Peca peca) {
         super("Computador" + nJogador, peca);
     }
-
 }

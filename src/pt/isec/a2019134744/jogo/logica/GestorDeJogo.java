@@ -10,8 +10,8 @@ import java.util.*;
 
 public class GestorDeJogo {
 
-    private final String REPLAYS_PATH = "./res/replays";
-    private final String SAVES_PATH = "./res/saves";
+    private final String REPLAYS_PATH = "." + File.separator + "res" + File.separator + "replays";
+    private final String SAVES_PATH = "." + File.separator + "res" + File.separator + "saves";
 
     private MaquinaEstados maquinaEstados;
     private final CareTaker careTaker;
@@ -23,7 +23,8 @@ public class GestorDeJogo {
 
     /* FUNCOES DO CARETAKER */
     public void undo(int nJogadas) {
-        careTaker.undo(nJogadas);
+        if(nJogadas > 0)
+            careTaker.undo(nJogadas);
     }
 
     /* FUNCOES DA MAQUINA DE ESTADOS */
@@ -78,7 +79,7 @@ public class GestorDeJogo {
         return maquinaEstados.getInfoJogo();
     }
 
-    public String getResultadoJogo() { return maquinaEstados.getResultadoJogo(); }
+    public String getContexto() { return maquinaEstados.getContexto(); }
 
     public boolean isHumano() { return maquinaEstados.isHumano(); }
 
@@ -129,12 +130,12 @@ public class GestorDeJogo {
         }
 
         if(listaReplays.size() >= 6) {
-            boolean ig = new File(REPLAYS_PATH + "/" + listaReplays.get(listaReplays.size() - 1)).delete();
+            boolean ig = new File(REPLAYS_PATH + File.separator + listaReplays.get(listaReplays.size() - 1)).delete();
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
         LocalDateTime now = LocalDateTime.now();
-        File f = new File(REPLAYS_PATH + "/jogo_" + dtf.format(now) + ".txt");
+        File f = new File(REPLAYS_PATH + File.separator + "jogo_" + dtf.format(now) + ".txt");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(f, false))) {
 
@@ -151,7 +152,7 @@ public class GestorDeJogo {
         List<String> replay = new ArrayList<>();
         replay.add("Replay do ficheiro: " + ficheiro + "\n");
 
-        File fich = new File(REPLAYS_PATH + "/" + ficheiro);
+        File fich = new File(REPLAYS_PATH + File.separator + ficheiro);
 
         try (Scanner sc = new Scanner(new FileReader(fich))) {
 
@@ -177,7 +178,7 @@ public class GestorDeJogo {
             nomeSave = nomeSave.split("\\.")[0];
 
 
-        File f = new File(SAVES_PATH + "/" + nomeSave + ".dat");
+        File f = new File(SAVES_PATH + File.separator + nomeSave + ".dat");
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
 
             oos.writeObject(maquinaEstados);
@@ -191,7 +192,7 @@ public class GestorDeJogo {
 
     public String carregaJogo(String nomeSave) {
 
-        File f = new File(SAVES_PATH + "/" + nomeSave + ".dat");
+        File f = new File(SAVES_PATH + File.separator + nomeSave + ".dat");
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
 
             maquinaEstados = (MaquinaEstados) ois.readObject();

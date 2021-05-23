@@ -19,8 +19,9 @@ import java.util.Scanner;
 public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     // Info Jogo
-    private String infoJogo;
-    private final List<String> infoReplay;
+    private String contexto;
+    private StringBuilder contextoJogo;
+    private List<String> infoReplay;
 
     // Dados Jogadores
     private Player jogador1;
@@ -58,22 +59,24 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     public boolean comecaJogo(String... jogadores) {
         // Verifica o numero de nomes de jogador
         if(jogadores.length > 2) {
-            infoJogo = " Numero de jogadores inválido!";
+            contexto = " Numero de jogadores inválido!";
             return false;
         }
 
         // Verifica se os nomes sao iguais -> se forem manda para trás
         if(jogadores.length == 2 && jogadores[0].equalsIgnoreCase(jogadores[1])) {
-            infoJogo = " Os nomes introduzidos são iguais!\nIntroduza nomes diferentes para os 2 jogadores";
+            contexto = " Os nomes introduzidos são iguais!\nIntroduza nomes diferentes para os 2 jogadores";
             return false;
         }
 
+        StringBuilder sb = new StringBuilder();
+
         switch(jogadores.length) {
             case 1 -> {
-                if (jogadores[0].equalsIgnoreCase("")) adicionaJogadores();
-                else adicionaJogadores(jogadores[0]);
+                if (jogadores[0].equalsIgnoreCase("")) adicionaJogadores(sb);
+                else adicionaJogadores(jogadores[0], sb);
             }
-            case 2 -> adicionaJogadores(jogadores[0], jogadores[1]);
+            case 2 -> adicionaJogadores(jogadores[0], jogadores[1], sb);
         }
 
         // Sortear o primeiro jogador
@@ -83,34 +86,36 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         else
             jogadorAtivo = JogadorAtivo.jogador2;
 
+        sb.append("O primeiro a jogar é o jogador ").append(getJogadorAtivo().getNome()).append("!!\n");
+
+        contexto = sb.toString();
+        infoReplay.add(contexto);
+        infoReplay.add("\nEspera\n");
         return true;
     }
 
-    private void adicionaJogadores(String jogador1, String jogador2) {
+    private void adicionaJogadores(String jogador1, String jogador2, StringBuilder sb) {
         this.jogador1 = new Humano(jogador1, Peca.Vermelha);
         this.jogador2 = new Humano(jogador2, Peca.Amarela);
 
-        infoJogo = ConsoleColors.PURPLE + "2 Jogadores Humanos:\n" + ConsoleColors.RESET + this.jogador1 + "\n" + this.jogador2 + "\n";
-        infoReplay.add(infoJogo);
-        infoReplay.add("\nEspera\n");
+        sb.append(ConsoleColors.PURPLE + "2 Jogadores Humanos:\n" + ConsoleColors.RESET).append(this.jogador1)
+                .append("\n").append(this.jogador2).append("\n");
     }
 
-    private void adicionaJogadores(String jogador1) {
+    private void adicionaJogadores(String jogador1, StringBuilder sb) {
         this.jogador1 = new Humano(jogador1, Peca.Vermelha);
         this.jogador2 = new Virtual(2, Peca.Amarela);
 
-        infoJogo = ConsoleColors.PURPLE + "1 Jogador Humano e 1 Jogador Virtual:\n" + ConsoleColors.RESET + this.jogador1 + "\n\n" + this.jogador2 + "\n";
-        infoReplay.add(infoJogo);
-        infoReplay.add("\nEspera\n");
+        sb.append(ConsoleColors.PURPLE + "1 Jogador Humano e 1 Jogador Virtual:\n" + ConsoleColors.RESET)
+                .append(this.jogador1).append("\n\n").append(this.jogador2).append("\n");
     }
 
-    private void adicionaJogadores() {
+    private void adicionaJogadores(StringBuilder sb) {
         this.jogador1 = new Virtual(1, Peca.Vermelha);
         this.jogador2 = new Virtual(2, Peca.Amarela);
 
-        infoJogo = ConsoleColors.PURPLE + "2 Jogadores Virtuais:\n" + ConsoleColors.RESET + this.jogador1 + "\n\n" + this.jogador2 + "\n";
-        infoReplay.add(infoJogo);
-        infoReplay.add("\nEspera\n");
+        sb.append(ConsoleColors.PURPLE + "2 Jogadores Virtuais:\n" + ConsoleColors.RESET).append(this.jogador1)
+                .append("\n\n").append(this.jogador2).append("\n");
     }
 
     public void switchJogadorAtivo() {
@@ -131,17 +136,17 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         if(tabuleiro.introduzPeca(nColuna, getJogadorAtivo().getPeca())) {
             // Se for humano vai incrementar contador de jogada
             if (isHumano())
-                ((Humano) getJogadorAtivo()).incNJogada();
-            infoJogo = String.format(ConsoleColors.PURPLE + "Foi introduzida uma peça " + getJogadorAtivo().getPeca().toString() +
+                getJogadorAtivo().incJogada();
+            contexto = String.format(ConsoleColors.PURPLE + "Foi introduzida uma peça " + getJogadorAtivo().getPeca().toString() +
                             " na posicao %d\n" + ConsoleColors.RESET + "%s", nColuna, imprimeTabuleiroJogo());
-            infoReplay.add(infoJogo);
+            infoReplay.add(contexto);
             infoReplay.add("\nespera\n");
             return true;
         }
         // Nao conseguiu jogar a peça -> pede novamente
-        infoJogo = String.format(ConsoleColors.PURPLE + "Tentou introduzir uma peça " + getJogadorAtivo().getPeca().toString() +
+        contexto = String.format(ConsoleColors.PURPLE + "Tentou introduzir uma peça " + getJogadorAtivo().getPeca().toString() +
                 " numa posição inválida!\n" + ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
-        infoReplay.add(infoJogo);
+        infoReplay.add(contexto);
         infoReplay.add("\nespera\n");
 
         return false;
@@ -149,25 +154,25 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     public boolean jogaPecaEspecial(int nColuna) {
         if(!getJogadorAtivo().jogaPecaEspecial()) {
-            infoJogo = String.format(ConsoleColors.PURPLE + "Tentou jogar uma peça especial na posicao " + nColuna +
+            contexto = String.format(ConsoleColors.PURPLE + "Tentou jogar uma peça especial na posicao " + nColuna +
                     " mas nao tem nenhuma peça especial no seu bolso!\n" + ConsoleColors.RESET + "%s",
                     imprimeTabuleiroJogo());
-            infoReplay.add(infoJogo);
+            infoReplay.add(contexto);
             infoReplay.add("\nespera\n");
             return false;
         }
         if(!tabuleiro.removeColuna(nColuna)) {
             getJogadorAtivo().ganhaPecaEspecial();
-            infoJogo = String.format(ConsoleColors.PURPLE + "Nao foi possivel limpar a coluna " + nColuna +
+            contexto = String.format(ConsoleColors.PURPLE + "Nao foi possivel limpar a coluna " + nColuna +
                             "! A peça especial foi reposta no seu bolso :P\n" + ConsoleColors.RESET + "%s",
                     imprimeTabuleiroJogo());
             return false;
         }
         if (isHumano())
-            ((Humano) getJogadorAtivo()).incNJogada();
-        infoJogo = String.format(ConsoleColors.PURPLE + "Foi jogada uma peça especial na coluna " + nColuna +
+            getJogadorAtivo().incJogada();
+        contexto = String.format(ConsoleColors.PURPLE + "Foi jogada uma peça especial na coluna " + nColuna +
                         " que a deixou vazia!\n" + ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
-        infoReplay.add(infoJogo);
+        infoReplay.add(contexto);
         infoReplay.add("\nespera\n");
         return true;
     }
@@ -183,15 +188,15 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     public int getNJogadaHumano() {
         if(isHumano()) {
             Humano a = (Humano) getJogadorAtivo();
-            return a.getnJogada();
+            return a.getJogada();
         }
         return -1;
     }
 
     public void desiste() {
-        infoJogo = String.format("O jogador " + ConsoleColors.GREEN + "%s" + ConsoleColors.RESET +
+        contexto = String.format("O jogador " + ConsoleColors.GREEN + "%s" + ConsoleColors.RESET +
                 " desistiu... ;-;\n%s\n\n", getJogadorAtivo().getNome(), imprimeTabuleiroJogo());
-        infoReplay.add(infoJogo);
+        infoReplay.add(contexto);
         // infoReplay.add("\nespera\n");
         isJogoTerminado = true;
         switchJogadorAtivo();   // Jogador que ganhou é o ativo
@@ -214,10 +219,9 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         String feedback;
         if(isJogoTerminado) {
             feedback = String.format(ConsoleColors.PURPLE + "O jogador " +
-                    ConsoleColors.GREEN + getJogadorAtivo().getNome() + ConsoleColors.PURPLE +
+                    getJogadorAtivo().getNome() + ConsoleColors.PURPLE +
                     " é o grande Vencedor!!\n"+ ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
             infoReplay.add(feedback);
-            // infoReplay.add("\nespera\n");
             return feedback;
         }
         infoReplay.add("\n" + ConsoleColors.GREEN + "Jogador Ativo:\n" + ConsoleColors.RESET);
@@ -226,7 +230,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         return feedback;
     }
 
-    public String getResultadoJogo() { return infoJogo; }
+    public String getContexto() { return contexto; }
 
     /* Métodos de controlo do Minijogo */
     public void lancaMinijogo() {
@@ -240,18 +244,30 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public void setRespostaMinijogo(Scanner sc) {
-        infoJogo = jogoAtivo.setResposta(sc);
+        contextoJogo = new StringBuilder();
+        contextoJogo.append(jogoAtivo.setResposta(sc));
     }
 
     public boolean isFinishedMinijogo() {
         if(jogoAtivo.isFinished()) {
-            if (jogoAtivo.isVencedor())
+            if (isVencedorMinijogo()) {
                 getJogadorAtivo().ganhaPecaEspecial();
+                contexto = contextoJogo.append("Ganhou o Minijogo e consequentemente 1 peça especial!\n").toString();
+                isMinijogoDecorrer = false;
+                return true;
+            }
             switchMinijogo();
             isMinijogoDecorrer = false;
+            getJogadorAtivo().incJogada();
+            contexto = contextoJogo.append("Infelizmente não foi desta que leva a peça especial, melhor sorte para a próxima!\n").toString();
             return true;
         }
+        contexto = contextoJogo.toString();
         return false;
+    }
+
+    public boolean isVencedorMinijogo() {
+        return jogoAtivo.isVencedor();
     }
 
     public void switchMinijogo() {
@@ -286,11 +302,12 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     @Override
     public Memento getMemento() {
         return new Memento(new Object[] {
-            jogador1, jogador2, jogadorAtivo, tabuleiro
+            jogador1, jogador2, jogadorAtivo, tabuleiro, infoReplay
         });
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean setMemento(Memento m, int nJogadas) {
         if (getJogadorAtivo().usaCreditos(nJogadas)) {
 
@@ -302,6 +319,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogador2 = (Player) array[1];
             jogadorAtivo = (JogadorAtivo) array[2];
             tabuleiro = (Tabuleiro) array[3];
+            infoReplay = (ArrayList<String>) array[4];
 
             jogador1.setCreditos(creditosJogador1);
             jogador2.setCreditos(creditosJogador2);
@@ -315,4 +333,5 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     public List<String> getReplay() {
         return infoReplay;
     }
+
 }

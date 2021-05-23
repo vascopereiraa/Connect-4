@@ -47,7 +47,7 @@ public class UIConnect4 {
     private void uiJogaMinijogo() {
         System.out.println("\n" + gestorDeJogo.getPerguntaMinijogo());
         gestorDeJogo.respondeMinijogo(sc);
-        System.out.println(gestorDeJogo.getResultadoJogo());
+        System.out.println(gestorDeJogo.getContexto());
     }
 
     private void uiDecisaoMinijogo() {
@@ -64,12 +64,19 @@ public class UIConnect4 {
         System.out.println(ConsoleColors.GREEN + "Jogador Humano" + ConsoleColors.RESET);
         System.out.print(gestorDeJogo.getInfoJogo());
         System.out.println(gestorDeJogo.getTabuleiro());
-        boolean keep = true;
+        boolean keep;
         do {
+            keep = true;
             switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Gravar jogo", "Desistir")) {
                 case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
                 case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
-                case 3 -> gestorDeJogo.undo(Util.pedeInteiro("Numero de jogadas a reverter: "));
+                case 3 -> {
+                    int nJogadas = Util.pedeInteiro("Numero de jogadas a reverter: ");
+                    if(nJogadas > 0)
+                        gestorDeJogo.undo(nJogadas);
+                    else
+                        keep = false;
+                }
                 case 4 -> {
                     System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
                     keep = false;
@@ -77,7 +84,7 @@ public class UIConnect4 {
                 case 0 -> gestorDeJogo.termina();
             }
         } while(!keep);
-        System.out.println("\n" + gestorDeJogo.getResultadoJogo());
+        System.out.println("\n" + gestorDeJogo.getContexto());
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
     }
@@ -99,7 +106,7 @@ public class UIConnect4 {
             }
             case 0 -> gestorDeJogo.recomeca();
         }
-        String contexto = gestorDeJogo.getResultadoJogo();
+        String contexto = gestorDeJogo.getContexto();
         if(contexto.charAt(0) != ' ') {
             System.out.println("\n" + contexto);
             System.out.println("..Presssione [ENTER] para iniciar o jogo..");
@@ -111,7 +118,7 @@ public class UIConnect4 {
     }
 
     private void uiInicio() {
-        System.out.println(ConsoleColors.BLUE + "Inicio" + ConsoleColors.RESET);
+        System.out.println("\n" + ConsoleColors.BLUE + "Inicio" + ConsoleColors.RESET);
         switch (Util.escolheOpcao("Começar", "Ver o replay de um jogo anterior", "Carregar um jogo", "Sair")) {
             case 1 -> gestorDeJogo.inicia();
             case 2 -> verReplay();
@@ -127,7 +134,7 @@ public class UIConnect4 {
         int random = (int) (Math.random() * 7) + 1;
         System.out.println(gestorDeJogo.getNomeJogador() + ": Vou jogar uma peça na coluna " + random);
         gestorDeJogo.joga(random);
-        System.out.println("\n" + gestorDeJogo.getResultadoJogo());
+        System.out.println("\n" + gestorDeJogo.getContexto());
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
     }
@@ -149,14 +156,17 @@ public class UIConnect4 {
         // Remove item mais antigo da pasta _> Este está sempre na ult. pos.
         ficheiros.remove(ficheiros.size() - 1);
 
+        System.out.println("0 - sair");
         for(int i = 0; i < ficheiros.size(); ++i)
             System.out.println((i + 1) + " - " + ficheiros.get(i));
 
         int num;
         do {
             num = Util.pedeInteiro("Introduza o numero do ficheiro que prentende carregar: ");
-        } while(num < 1 || num > ficheiros.size());
+        } while(num < 0 || num > ficheiros.size());
 
+        if(num == 0)
+            return;
         
         List<String> replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
         if(replay == null)

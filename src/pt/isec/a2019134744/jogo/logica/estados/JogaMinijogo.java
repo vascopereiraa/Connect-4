@@ -14,8 +14,12 @@ public class JogaMinijogo extends EstadoAdapter {
     @Override
     public IEstado respondeMinijogo(Scanner sc) {
         super.getJogo().setRespostaMinijogo(sc);
-        if(super.getJogo().isFinishedMinijogo())
+        if(super.getJogo().isFinishedMinijogo()) {
+            // Verifica se ganhou ou perdeu o minijogo
+            if(!super.getJogo().isVencedorMinijogo())
+                super.getJogo().switchJogadorAtivo();
             return new AguardaJogada(super.getJogo());
+        }
         return this;
     }
 

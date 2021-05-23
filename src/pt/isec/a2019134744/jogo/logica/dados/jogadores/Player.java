@@ -15,20 +15,36 @@ public abstract class Player implements Serializable {
     }
 
     public String getNome() {
-        return nome;
+        return ConsoleColors.CYAN + nome + ConsoleColors.RESET;
     }
 
     public Peca getPeca() { return peca; }
 
+    public int getJogada() {
+        return 0;
+    }
+
+    public void incJogada() {
+
+    }
+
     public boolean jogaPecaEspecial() { return false; }
 
-    public boolean usaCreditos(int creditos) { return false; }
+    public void ganhaPecaEspecial() {
 
-    public void setCreditos(int creditos) { }
+    }
 
-    public int getCreditos() { return 0; }
+    public int getCreditos() {
+        return 0;
+    }
 
-    public void ganhaPecaEspecial() { }
+    public void setCreditos(int creditos) {
+
+    }
+
+    public boolean usaCreditos(int creditos) {
+        return false;
+    }
 
     @Override
     public String toString() {

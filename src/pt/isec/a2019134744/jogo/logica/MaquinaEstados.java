@@ -76,7 +76,7 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return jogoConnect4.toString();
     }
 
-    public String getResultadoJogo() { return jogoConnect4.getResultadoJogo(); }
+    public String getContexto() { return jogoConnect4.getContexto(); }
 
     public boolean isHumano() { return jogoConnect4.isHumano(); }
 
