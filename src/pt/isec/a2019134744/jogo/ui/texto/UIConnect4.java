@@ -153,7 +153,7 @@ public class UIConnect4 {
         switch (Util.escolheOpcao("Começar", "Ver o replay de um jogo anterior", "Carregar um jogo", "Sair")) {
             case 1 -> gestorDeJogo.inicia();
             case 2 -> verReplay();
-            case 3 -> System.out.println(gestorDeJogo.carregaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
+            case 3 -> carregaJogo();
             case 0 -> sair = true;
         }
     }
@@ -168,6 +168,25 @@ public class UIConnect4 {
         System.out.println("\n" + gestorDeJogo.getContexto());
         System.out.println("..Presssione [ENTER] para continuar..");
         sc.nextLine();
+    }
+
+    private void carregaJogo() {
+
+        List<String> ficheiros =  gestorDeJogo.getListaSaves();
+
+        System.out.println("0 - Sair");
+        for(int i = 0; i < ficheiros.size(); ++i)
+            System.out.println((i + 1) + " - " + ficheiros.get(i));
+
+        int num;
+        do {
+            num = Util.pedeInteiro("Numero do ficheiro: ");
+        } while(num < 0 || num > ficheiros.size());
+
+        if(num == 0)
+            return;
+
+        System.out.println(gestorDeJogo.carregaJogo(ficheiros.get(num - 1)) + "\n");
     }
 
     private void verReplay() {

@@ -197,9 +197,27 @@ public class GestorDeJogo {
         return "Jogo gravado com o nome " + nomeSave + " com sucesso!";
     }
 
+    public List<String> getListaSaves() {
+        List<String> lista = new ArrayList<>();
+        File dir = new File(SAVES_PATH);
+
+        if(!dir.exists())
+            return lista;
+
+        for(File f : Objects.requireNonNull(dir.listFiles())) {
+            if(f.getName().contains(".dat")) {
+                lista.add(f.getName());
+            }
+        }
+
+        Collections.sort(lista);
+
+        return lista;
+    }
+
     public String carregaJogo(String nomeSave) {
 
-        File f = new File(SAVES_PATH + File.separator + nomeSave + ".dat");
+        File f = new File(SAVES_PATH + File.separator + nomeSave);
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
 
             maquinaEstados = (MaquinaEstados) ois.readObject();
