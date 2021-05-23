@@ -311,6 +311,8 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     public boolean setMemento(Memento m, int nJogadas) {
         if (getJogadorAtivo().usaCreditos(nJogadas)) {
 
+            getJogadorAtivo().resetJogada();
+            int pecasEspeciais = getJogadorAtivo().getnPecasEspeciais();
             int creditosJogador1 = jogador1.getCreditos();
             int creditosJogador2 = jogador2.getCreditos();
 
@@ -323,6 +325,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
             jogador1.setCreditos(creditosJogador1);
             jogador2.setCreditos(creditosJogador2);
+            getJogadorAtivo().setnPecasEspeciais(pecasEspeciais);
 
             return true;
         }

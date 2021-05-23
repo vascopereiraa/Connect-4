@@ -33,6 +33,8 @@ public class UIConnect4 {
                 case FimJogo -> uiFimJogo();
             }
         }
+
+        System.out.println("\nO JOGO FOI ENCERRADO!\n");
     }
 
     private void uiFimJogo() {
@@ -63,30 +65,44 @@ public class UIConnect4 {
         System.out.println("\n" + ConsoleColors.BLUE + "Aguarda Jogada" + ConsoleColors.RESET);
         System.out.println(ConsoleColors.GREEN + "Jogador Humano" + ConsoleColors.RESET);
         System.out.print(gestorDeJogo.getInfoJogo());
-        System.out.println(gestorDeJogo.getTabuleiro());
         boolean keep;
         do {
             keep = true;
-            switch (Util.escolheOpcao("Jogar peça", "Jogar peça especial", "Voltar a trás", "Gravar jogo", "Desistir")) {
-                case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
-                case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
-                case 3 -> {
-                    int nJogadas = Util.pedeInteiro("Numero de jogadas a reverter: ");
-                    if(nJogadas > 0)
-                        gestorDeJogo.undo(nJogadas);
-                    else
+            System.out.println(gestorDeJogo.getTabuleiro());
+            System.out.println("""
+                    1 - Jogar peça
+                    2 - Jogar peça especial
+                    3 - Voltar a trás
+                    4 - Gravar jogo
+                                        
+                    9 - Sair
+                    0 - Desistir
+                    """);
+            if (sc.hasNextInt()) {
+                switch (sc.nextInt()) {
+                    case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
+                    case 2 -> gestorDeJogo.jogaEspecial(Util.pedeInteiro("Numero da Coluna: "));
+                    case 3 -> {
+                        int nJogadas = Util.pedeInteiro("Numero de jogadas a reverter: ");
+                        if (nJogadas > 0)
+                            gestorDeJogo.undo(nJogadas);
                         keep = false;
+                    }
+                    case 4 -> {
+                        System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
+                        keep = false;
+                    }
+                    case 9 -> sair = true;
+                    case 0 -> gestorDeJogo.termina();
                 }
-                case 4 -> {
-                    System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
-                    keep = false;
+                if (!sair) {
+                    System.out.println("\n" + gestorDeJogo.getContexto());
+                    System.out.println("..Presssione [ENTER] para continuar..");
+                    sc.nextLine();
+                    sc.nextLine();
                 }
-                case 0 -> gestorDeJogo.termina();
             }
-        } while(!keep);
-        System.out.println("\n" + gestorDeJogo.getContexto());
-        System.out.println("..Presssione [ENTER] para continuar..");
-        sc.nextLine();
+        } while (!keep);
     }
 
     private void uiAguardaJogadores() {

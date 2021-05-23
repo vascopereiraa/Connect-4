@@ -120,17 +120,18 @@ public class GestorDeJogo {
         return lista;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void gravaReplay() {
         List<String> infoReplay = maquinaEstados.getReplay();
         List<String> listaReplays = getListaReplays();
 
         File pasta = new File(REPLAYS_PATH);
         if(!pasta.exists()) {
-            boolean ig = pasta.mkdirs();
+            pasta.mkdirs();
         }
 
         if(listaReplays.size() >= 6) {
-            boolean ig = new File(REPLAYS_PATH + File.separator + listaReplays.get(listaReplays.size() - 1)).delete();
+            new File(REPLAYS_PATH + File.separator + listaReplays.get(listaReplays.size() - 1)).delete();
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
@@ -167,11 +168,12 @@ public class GestorDeJogo {
         return null;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public String gravaJogo(String nomeSave) {
 
         File pasta = new File(SAVES_PATH);
         if(!pasta.exists()) {
-            boolean ig = pasta.mkdirs();
+            pasta.mkdirs();
         }
 
         if(nomeSave.toLowerCase().contains("."))

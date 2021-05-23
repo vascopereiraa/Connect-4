@@ -28,6 +28,18 @@ public abstract class Player implements Serializable {
 
     }
 
+    public void resetJogada() {
+
+    }
+
+    public int getnPecasEspeciais() {
+        return 0;
+    }
+
+    public void setnPecasEspeciais(int nPecasEspeciais) {
+
+    }
+
     public boolean jogaPecaEspecial() { return false; }
 
     public void ganhaPecaEspecial() {

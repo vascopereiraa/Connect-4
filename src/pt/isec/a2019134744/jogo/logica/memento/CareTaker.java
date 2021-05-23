@@ -20,7 +20,7 @@ public class CareTaker {
             return;
 
         Deque<Memento> anteriores = new ArrayDeque<>();
-        for (int i = 0; i < nJogadas; ++i)
+        for (int i = 0; i < nJogadas + 1; ++i)
             anteriores.push(stackUndo.pop());
 //        System.out.println("Anteriores = " + anteriores.size() + "\nStack = " + stackUndo.size());
         Memento anterior = anteriores.pop();

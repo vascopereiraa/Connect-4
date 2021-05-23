@@ -24,6 +24,18 @@ public class Humano extends Player {
         ++nJogada;
     }
 
+    public void resetJogada() {
+        nJogada = 1;
+    }
+
+    public int getnPecasEspeciais() {
+        return nPecasEspeciais;
+    }
+
+    public void setnPecasEspeciais(int nPecasEspeciais) {
+        this.nPecasEspeciais = nPecasEspeciais;
+    }
+
     public boolean jogaPecaEspecial() {
         if(nPecasEspeciais > 0) {
             --nPecasEspeciais;
