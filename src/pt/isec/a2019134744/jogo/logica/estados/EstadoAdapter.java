@@ -38,7 +38,7 @@ public abstract class EstadoAdapter implements IEstado, Serializable {
     }
 
     @Override
-    public IEstado desisteMinijogo() {
+    public IEstado desiste() {
         return this;
     }
 

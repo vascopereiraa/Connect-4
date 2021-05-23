@@ -9,8 +9,8 @@ public class DecisaoMinijogo extends EstadoAdapter {
     }
 
     @Override
-    public IEstado desisteMinijogo() {
-        super.getJogo().switchMinijogoExecucao();
+    public IEstado desiste() {
+        super.getJogo().switchExecucaoMinijogo();
         return new AguardaJogada(super.getJogo());
     }
 

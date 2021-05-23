@@ -21,7 +21,8 @@ public class AguardaJogada extends EstadoAdapter {
             super.getJogo().switchJogadorAtivo();
             if((super.getJogo().getNJogadaHumano() % 5) == 0) {
                 // Se for a jogada de um humano lança DecisaoMiniJogo
-                super.getJogo().switchMinijogoExecucao();
+                super.getJogo().switchExecucaoMinijogo();
+                super.getJogo().switchMinijogo();
                 return new DecisaoMinijogo(super.getJogo());
             }
             // Continua jogo
@@ -46,8 +47,14 @@ public class AguardaJogada extends EstadoAdapter {
     }
 
     @Override
-    public IEstado termina() {
+    public IEstado desiste() {
         super.getJogo().desiste();
+        return new FimJogo(super.getJogo());
+    }
+
+    @Override
+    public IEstado termina() {
+        super.getJogo().encerraJogo();
         return new FimJogo(super.getJogo());
     }
 

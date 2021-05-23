@@ -31,6 +31,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     // Dados Tabuleiro Jogo
     private Tabuleiro tabuleiro;
     private boolean isJogoTerminado;
+    private boolean isJogoEncerrado;
 
     // Minijogos
     private transient IJogo jogoCalculos;
@@ -50,6 +51,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         infoReplay.clear();
         tabuleiro.resetTabuleiro();
         isJogoTerminado = false;
+        isJogoEncerrado = false;
         jogador1 = null;
         jogador2 = null;
         jogadorAtivo = JogadorAtivo.none;
@@ -214,8 +216,12 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     @Override
     public String toString() {
-        if(isMinijogoDecorrer)
+        if(isMinijogoDecorrer) {
+            if (jogoAtivo == null) {
+                iniciaMinijogos();
+            }
             return getJogadorAtivo().toString() + "\n" + jogoAtivo.toString();
+        }
         String feedback;
         if(isJogoTerminado) {
             feedback = String.format(ConsoleColors.PURPLE + "O jogador " +
@@ -223,6 +229,9 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
                     " é o grande Vencedor!!\n"+ ConsoleColors.RESET + "%s", imprimeTabuleiroJogo());
             infoReplay.add(feedback);
             return feedback;
+        }
+        if(isJogoEncerrado) {
+            return "O jogador " + getJogadorAtivo().getNome() + " encerrou o jogo!\n";
         }
         infoReplay.add("\n" + ConsoleColors.GREEN + "Jogador Ativo:\n" + ConsoleColors.RESET);
         feedback = getJogadorAtivo().toString() + "\n";
@@ -256,7 +265,6 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
                 isMinijogoDecorrer = false;
                 return true;
             }
-            switchMinijogo();
             isMinijogoDecorrer = false;
             getJogadorAtivo().incJogada();
             contexto = contextoJogo.append("Infelizmente não foi desta que leva a peça especial, melhor sorte para a próxima!\n").toString();
@@ -286,14 +294,14 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         }
     }
 
-    public void switchMinijogoExecucao() {
+    public void switchExecucaoMinijogo() {
         isMinijogoDecorrer = !isMinijogoDecorrer;
     }
 
     private void iniciaMinijogos() {
         jogoCalculos = new JogoCalculos();
         jogoPalavras = new JogoPalavras();
-        jogoAtivo = jogoCalculos;
+        jogoAtivo = jogoPalavras;
         isMinijogoDecorrer = false;
         repeatMinijogo = 0;
     }
@@ -327,6 +335,8 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogador2.setCreditos(creditosJogador2);
             getJogadorAtivo().setnPecasEspeciais(pecasEspeciais);
 
+            contexto = "Foram revertidas " + nJogadas + " jogadas!\n";
+
             return true;
         }
         return false;
@@ -337,4 +347,8 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         return infoReplay;
     }
 
+    public void encerraJogo() {
+        isJogoEncerrado = true;
+        contexto = "O jogo foi encerrado pelo jogador " + getJogadorAtivo().getNome() + "\n";
+    }
 }

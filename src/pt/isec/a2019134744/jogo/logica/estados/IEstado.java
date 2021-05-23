@@ -10,7 +10,7 @@ public interface IEstado {
     IEstado termina();
     IEstado joga(int nColuna);
     IEstado jogaEspecial(int nColuna);
-    IEstado desisteMinijogo();
+    IEstado desiste();
     IEstado jogaMinijogo();
     IEstado respondeMinijogo(Scanner sc);
     IEstado recomeca();

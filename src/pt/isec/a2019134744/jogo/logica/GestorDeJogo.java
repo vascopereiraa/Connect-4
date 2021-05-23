@@ -16,6 +16,8 @@ public class GestorDeJogo {
     private MaquinaEstados maquinaEstados;
     private final CareTaker careTaker;
 
+    boolean flagEncerraJogo = false;
+
     public GestorDeJogo() {
         this.maquinaEstados = new MaquinaEstados();
         this.careTaker = new CareTaker(maquinaEstados);
@@ -37,6 +39,7 @@ public class GestorDeJogo {
     }
 
     public void termina() {
+        flagEncerraJogo = true;
         maquinaEstados.termina();
     }
 
@@ -50,8 +53,8 @@ public class GestorDeJogo {
             careTaker.gravaMemento();
     }
 
-    public void desisteMinijogo() {
-        maquinaEstados.desisteMinijogo();
+    public void desiste() {
+        maquinaEstados.desiste();
     }
 
     public void jogaMinijogo() {
@@ -69,7 +72,7 @@ public class GestorDeJogo {
 
     public Situacao getSituacao() {
         Situacao situacao = maquinaEstados.getSituacao();
-        if (situacao == Situacao.FimJogo)
+        if (situacao == Situacao.FimJogo && !flagEncerraJogo)
             gravaReplay();
         return situacao;
     }
@@ -79,7 +82,9 @@ public class GestorDeJogo {
         return maquinaEstados.getInfoJogo();
     }
 
-    public String getContexto() { return maquinaEstados.getContexto(); }
+    public String getContexto() {
+        return maquinaEstados.getContexto();
+    }
 
     public boolean isHumano() { return maquinaEstados.isHumano(); }
 

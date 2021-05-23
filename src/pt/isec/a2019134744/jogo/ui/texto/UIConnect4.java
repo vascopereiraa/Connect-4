@@ -40,7 +40,7 @@ public class UIConnect4 {
     private void uiFimJogo() {
         System.out.println("\n" + ConsoleColors.BLUE + "Fim de Jogo" + ConsoleColors.RESET);
         System.out.println(gestorDeJogo.getInfoJogo());
-        switch (Util.escolheOpcao("Recomecar", "Sair")) {
+        switch (Util.escolheOpcao("Voltar ao Inicio", "Sair")) {
             case 1 -> gestorDeJogo.recomeca();
             case 0 -> sair = true;
         }
@@ -50,6 +50,7 @@ public class UIConnect4 {
         System.out.println("\n" + gestorDeJogo.getPerguntaMinijogo());
         gestorDeJogo.respondeMinijogo(sc);
         System.out.println(gestorDeJogo.getContexto());
+
     }
 
     private void uiDecisaoMinijogo() {
@@ -57,7 +58,7 @@ public class UIConnect4 {
         System.out.println(gestorDeJogo.getInfoJogo());
         switch (Util.escolheOpcao("Jogar o minijogo", "Desistir do minijogo")) {
             case 1 -> gestorDeJogo.jogaMinijogo();
-            case 0 -> gestorDeJogo.desisteMinijogo();
+            case 0 -> gestorDeJogo.desiste();
         }
     }
 
@@ -75,9 +76,10 @@ public class UIConnect4 {
                     3 - Voltar a trás
                     4 - Gravar jogo
                                         
-                    9 - Sair
-                    0 - Desistir
+                    9 - Desiste
+                    0 - Sair
                     """);
+            System.out.print("> ");
             if (sc.hasNextInt()) {
                 switch (sc.nextInt()) {
                     case 1 -> gestorDeJogo.joga(Util.pedeInteiro("Numero da Coluna: "));
@@ -86,16 +88,29 @@ public class UIConnect4 {
                         int nJogadas = Util.pedeInteiro("Numero de jogadas a reverter: ");
                         if (nJogadas > 0)
                             gestorDeJogo.undo(nJogadas);
-                        keep = false;
                     }
                     case 4 -> {
-                        System.out.println(gestorDeJogo.gravaJogo(Util.pedeString("Nome do ficheiro: ")) + "\n");
+                        System.out.println("Para cancelar escreva 'cancel'");
+                        String ficheiro = Util.pedeString( "Nome do ficheiro: ");
+                        if(!ficheiro.equalsIgnoreCase("cancel"))
+                            System.out.println(gestorDeJogo.gravaJogo(ficheiro) + "\n");
                         keep = false;
                     }
-                    case 9 -> sair = true;
-                    case 0 -> gestorDeJogo.termina();
+                    case 9 -> gestorDeJogo.desiste();
+                    
+                    case 0 -> {
+                        System.out.println("Tem a certeza que pretende sair?");
+                        if(Util.escolheOpcao("Sim", "Nao") == 1)
+                            gestorDeJogo.termina();
+                        else
+                            keep = false;
+                    }
+                    default -> {
+                        System.out.println("O numero introduzido nao corresponde a nenhuma funcao!\n");
+                        keep = false;
+                    }
                 }
-                if (!sair) {
+                if (keep) {
                     System.out.println("\n" + gestorDeJogo.getContexto());
                     System.out.println("..Presssione [ENTER] para continuar..");
                     sc.nextLine();

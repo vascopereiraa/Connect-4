@@ -51,8 +51,8 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return atual != anterior;
     }
 
-    public void desisteMinijogo() {
-        atual = atual.desisteMinijogo();
+    public void desiste() {
+        atual = atual.desiste();
     }
 
     public void jogaMinijogo() {
