@@ -216,12 +216,6 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
     @Override
     public String toString() {
-        if(isMinijogoDecorrer) {
-            if (jogoAtivo == null) {
-                iniciaMinijogos();
-            }
-            return getJogadorAtivo().toString() + "\n" + jogoAtivo.toString();
-        }
         String feedback;
         if(isJogoTerminado) {
             feedback = String.format(ConsoleColors.PURPLE + "O jogador " +
@@ -232,6 +226,12 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         }
         if(isJogoEncerrado) {
             return "O jogador " + getJogadorAtivo().getNome() + " encerrou o jogo!\n";
+        }
+        if(isMinijogoDecorrer) {
+            if (jogoAtivo == null) {
+                iniciaMinijogos();
+            }
+            return getJogadorAtivo().toString() + "\n" + jogoAtivo.toString();
         }
         infoReplay.add("\n" + ConsoleColors.GREEN + "Jogador Ativo:\n" + ConsoleColors.RESET);
         feedback = getJogadorAtivo().toString() + "\n";
@@ -303,7 +303,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         jogoPalavras = new JogoPalavras();
         jogoAtivo = jogoPalavras;
         isMinijogoDecorrer = false;
-        repeatMinijogo = 0;
+        repeatMinijogo = -1;
     }
 
     /* METODOS PARA A FUNCIONALIDADE DE 'UNDO' */
@@ -319,8 +319,9 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     public boolean setMemento(Memento m, int nJogadas) {
         if (getJogadorAtivo().usaCreditos(nJogadas)) {
 
-            getJogadorAtivo().resetJogada();
-            int pecasEspeciais = getJogadorAtivo().getnPecasEspeciais();
+            JogadorAtivo jogador = jogadorAtivo;
+            int pecasEspJogador1 = jogador1.getnPecasEspeciais();
+            int pecasEspJogador2 = jogador2.getnPecasEspeciais();
             int creditosJogador1 = jogador1.getCreditos();
             int creditosJogador2 = jogador2.getCreditos();
 
@@ -333,7 +334,12 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
 
             jogador1.setCreditos(creditosJogador1);
             jogador2.setCreditos(creditosJogador2);
-            getJogadorAtivo().setnPecasEspeciais(pecasEspeciais);
+            jogador1.setnPecasEspeciais(pecasEspJogador1);
+            jogador2.setnPecasEspeciais(pecasEspJogador2);
+            if(jogador == JogadorAtivo.jogador1)
+                jogador1.resetJogada();
+            else
+                jogador2.resetJogada();
 
             contexto = "Foram revertidas " + nJogadas + " jogadas!\n";
 
