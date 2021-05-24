@@ -174,6 +174,15 @@ public class UIConnect4 {
 
         List<String> ficheiros =  gestorDeJogo.getListaSaves();
 
+        if(ficheiros.size() == 0) {
+            System.out.println("""
+            Não existe nenhum save guardado!
+            ..Presssione [ENTER] para continuar..
+            """);
+            sc.nextLine();
+            return ;
+        }
+
         System.out.println("0 - Sair");
         for(int i = 0; i < ficheiros.size(); ++i)
             System.out.println((i + 1) + " - " + ficheiros.get(i));

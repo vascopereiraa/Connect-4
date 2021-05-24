@@ -301,7 +301,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     private void iniciaMinijogos() {
         jogoCalculos = new JogoCalculos();
         jogoPalavras = new JogoPalavras();
-        jogoAtivo = jogoPalavras;
+        jogoAtivo = jogoCalculos;
         isMinijogoDecorrer = false;
         repeatMinijogo = -1;
     }

@@ -38,6 +38,8 @@ public class JogoCalculos implements IJogo {
 
     @Override
     public String setResposta(Scanner sc) {
+        while (!sc.hasNextInt())
+            sc.next();
         if(sc.nextInt() == resultado) {
             nAcertos++;
             return String.format("Resposta Certa!\nJá acertou em %d questões e passaram-se %d segundos\n",
@@ -62,7 +64,7 @@ public class JogoCalculos implements IJogo {
     }
 
     private int getRandomNum() {
-        return (int)(Math.random() * 10) + 1;
+        return (int)(Math.random() * 100) + 1;
     }
 
     @Override
