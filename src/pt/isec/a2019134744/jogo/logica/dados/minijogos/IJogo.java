@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public interface IJogo {
 
-    public void inicializaJogo();
-    public String getPergunta();
-    public String setResposta(Scanner sc);
-    public boolean isFinished ();
-    public boolean isVencedor();
+    void inicializaJogo();
+    String getPergunta();
+    String setResposta(String resposta);
+    boolean isVencedor();
+    boolean isFinished ();
 
 }

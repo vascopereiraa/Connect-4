@@ -59,8 +59,8 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         atual = atual.jogaMinijogo();
     }
 
-    public void respondeMinijogo(Scanner sc) {
-        atual = atual.respondeMinijogo(sc);
+    public void respondeMinijogo(String resposta) {
+        atual = atual.respondeMinijogo(resposta);
     }
 
     public void recomeca() {

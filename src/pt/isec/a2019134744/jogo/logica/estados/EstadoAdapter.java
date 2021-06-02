@@ -48,7 +48,7 @@ public abstract class EstadoAdapter implements IEstado, Serializable {
     }
 
     @Override
-    public IEstado respondeMinijogo(Scanner sc) {
+    public IEstado respondeMinijogo(String resposta) {
         return this;
     }
 

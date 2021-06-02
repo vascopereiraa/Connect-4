@@ -37,10 +37,16 @@ public class JogoCalculos implements IJogo {
     }
 
     @Override
-    public String setResposta(Scanner sc) {
-        while (!sc.hasNextInt())
-            sc.next();
-        if(sc.nextInt() == resultado) {
+    public String setResposta(String resposta) {
+        Integer number;
+        try {
+            assert resposta != null;
+            number = Integer.parseInt(resposta);
+        } catch (NumberFormatException nfe) {
+            number = null;
+        }
+
+        if(number != null && number == resultado) {
             nAcertos++;
             return String.format("Resposta Certa!\nJá acertou em %d questões e passaram-se %d segundos\n",
                     nAcertos, (System.currentTimeMillis() - start) / 1000);

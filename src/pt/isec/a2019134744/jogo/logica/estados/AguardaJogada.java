@@ -19,7 +19,7 @@ public class AguardaJogada extends EstadoAdapter {
                 return new FimJogo(super.getJogo());
             }
             super.getJogo().switchJogadorAtivo();
-            if((super.getJogo().getNJogadaHumano() % 5) == 0) {
+            if((super.getJogo().getNJogadaHumano() % 4) == 0 && super.getJogo().getNJogadaHumano() > 0) {
                 // Se for a jogada de um humano lança DecisaoMiniJogo
                 super.getJogo().switchExecucaoMinijogo();
                 super.getJogo().switchMinijogo();
@@ -36,7 +36,7 @@ public class AguardaJogada extends EstadoAdapter {
     public IEstado jogaEspecial(int nColuna) {
         if(super.getJogo().jogaPecaEspecial(nColuna)) {
             super.getJogo().switchJogadorAtivo();
-            if(super.getJogo().getNJogadaHumano() % 5 == 0) {
+            if((super.getJogo().getNJogadaHumano() % 4) == 0 && super.getJogo().getNJogadaHumano() > 0) {
                 // Se for a jogada de um humano lança DecisaoMiniJogo
                 super.getJogo().switchExecucaoMinijogo();
                 super.getJogo().switchMinijogo();

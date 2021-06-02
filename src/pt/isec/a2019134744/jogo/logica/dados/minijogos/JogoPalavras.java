@@ -74,13 +74,12 @@ public class JogoPalavras implements IJogo {
         // Eliminar o utlimo espaço do conjunto de palavras
         sb.deleteCharAt(sb.toString().length() - 1);
 
-        return sb.append("\n").toString();
+        return sb.append("\n\n").toString();
     }
 
     @Override
-    public String setResposta(Scanner sc) {
-        int anterior = nCertas;
-        String[] input = sc.nextLine().toLowerCase().split("\\s");
+    public String setResposta(String resposta) {
+        String[] input = resposta.toLowerCase().split("\\s");
         for(String palavra : input)
             if(palavras.contains(palavra)) {
                 palavras.remove(palavra);

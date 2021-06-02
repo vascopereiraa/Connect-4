@@ -252,9 +252,9 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         return jogoAtivo.getPergunta();
     }
 
-    public void setRespostaMinijogo(Scanner sc) {
+    public void setRespostaMinijogo(String resposta) {
         contextoJogo = new StringBuilder();
-        contextoJogo.append(jogoAtivo.setResposta(sc));
+        contextoJogo.append(jogoAtivo.setResposta(resposta));
     }
 
     public boolean isFinishedMinijogo() {

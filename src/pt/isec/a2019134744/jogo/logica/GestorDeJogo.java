@@ -1,5 +1,9 @@
 package pt.isec.a2019134744.jogo.logica;
 
+import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
+import pt.isec.a2019134744.jogo.logica.dados.Tabuleiro;
+import pt.isec.a2019134744.jogo.logica.dados.jogadores.JogadorAtivo;
+import pt.isec.a2019134744.jogo.logica.dados.jogadores.Player;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import pt.isec.a2019134744.jogo.logica.memento.CareTaker;
 
@@ -16,11 +20,14 @@ public class GestorDeJogo {
     private MaquinaEstados maquinaEstados;
     private final CareTaker careTaker;
 
+    private CareTaker leitorReplays;
+
     boolean flagEncerraJogo = false;
 
     public GestorDeJogo() {
         this.maquinaEstados = new MaquinaEstados();
         this.careTaker = new CareTaker(maquinaEstados);
+        this.leitorReplays = null;
     }
 
     /* FUNCOES DO CARETAKER */
@@ -61,8 +68,8 @@ public class GestorDeJogo {
         maquinaEstados.jogaMinijogo();
     }
 
-    public void respondeMinijogo(Scanner sc) {
-        maquinaEstados.respondeMinijogo(sc);
+    public void respondeMinijogo(String resposta) {
+        maquinaEstados.respondeMinijogo(resposta);
     }
 
     public void recomeca() {
@@ -110,7 +117,7 @@ public class GestorDeJogo {
         String older = "";
         long lastMod = Long.MAX_VALUE;
         for(File f : Objects.requireNonNull(dir.listFiles())) {
-            if(f.getName().contains(".txt")) {
+            if(f.getName().contains(".dat")) {
                 lista.add(f.getName());
                 if(f.lastModified() < lastMod) {
                     older = f.getName();
@@ -141,12 +148,11 @@ public class GestorDeJogo {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
         LocalDateTime now = LocalDateTime.now();
-        File f = new File(REPLAYS_PATH + File.separator + "jogo_" + dtf.format(now) + ".txt");
+        File f = new File(REPLAYS_PATH + File.separator + "jogo_" + dtf.format(now) + ".dat");
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(f, false))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
 
-            for (String s : infoReplay)
-                bw.write(s);
+            oos.writeObject(careTaker);
 
         } catch(IOException e) {
             e.printStackTrace();
@@ -154,23 +160,38 @@ public class GestorDeJogo {
 
     }
 
-    public List<String> verReplay(String ficheiro) {
-        List<String> replay = new ArrayList<>();
-        replay.add("Replay do ficheiro: " + ficheiro + "\n");
+    public String verReplay(String ficheiro) {
 
-        File fich = new File(REPLAYS_PATH + File.separator + ficheiro);
+        if(leitorReplays == null) {
+            File fich = new File(REPLAYS_PATH + File.separator + ficheiro);
 
-        try (Scanner sc = new Scanner(new FileReader(fich))) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fich))) {
 
-            while(sc.hasNextLine())
-                replay.add(sc.nextLine());
+                leitorReplays = (CareTaker) ois.readObject();
 
-            return replay;
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
-        return null;
+        Object[] array = (Object[]) leitorReplays.getLastMemento().getSnapshot();
+        if(array == null) {
+            leitorReplays = null;
+            return null;
+        }
+        JogadorAtivo jogadorAtivo = (JogadorAtivo) array[2];
+        Player jogador;
+        if(jogadorAtivo == JogadorAtivo.jogador1)
+            jogador = (Player) array[0];
+        else
+            jogador = (Player) array[1];
+        Tabuleiro tab = (Tabuleiro) array[3];
+
+        return jogador.toString() + "\n" + tab.imprimeTab() + "\n";
+    }
+
+    public void resetReplays() {
+        leitorReplays = null;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

@@ -12,7 +12,7 @@ public interface IEstado {
     IEstado jogaEspecial(int nColuna);
     IEstado desiste();
     IEstado jogaMinijogo();
-    IEstado respondeMinijogo(Scanner sc);
+    IEstado respondeMinijogo(String resposta);
     IEstado recomeca();
 
     Situacao getSituacao();

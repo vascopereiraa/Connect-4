@@ -21,7 +21,7 @@ public class Tabuleiro implements Serializable {
             Arrays.fill(linha, Peca.none);
     }
 
-    String imprimeTab() {
+    public String imprimeTab() {
         StringBuilder sb = new StringBuilder("\n");
         for(Peca[] linha : tab) {
             for (Peca item : linha) {
@@ -34,7 +34,7 @@ public class Tabuleiro implements Serializable {
         return sb.toString();
     }
 
-    boolean introduzPeca(int nColuna, Peca peca) {
+    public boolean introduzPeca(int nColuna, Peca peca) {
         if(isColunaInvalida(nColuna))
             return false;
         for(int i = tab.length - 1; i >= 0; --i)
@@ -45,7 +45,7 @@ public class Tabuleiro implements Serializable {
         return false;
     }
 
-    boolean verificaVencedor(Peca peca) {
+    public boolean verificaVencedor(Peca peca) {
         return verificaVencedorVertical(peca) ||
                 verificaVencedorHorizontal(peca) ||
                 verificaVencedorDiagonalCrescente(peca) ||

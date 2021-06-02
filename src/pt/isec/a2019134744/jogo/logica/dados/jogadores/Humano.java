@@ -11,7 +11,7 @@ public class Humano extends Player {
 
     public Humano(String nome, Peca peca) {
         super(nome, peca);
-        this.nJogada = 1;
+        this.nJogada = 0;
         this.nPecasEspeciais = 0;
         this.creditos = 5;
     }

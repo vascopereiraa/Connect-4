@@ -1,9 +1,16 @@
 package pt.isec.a2019134744.jogo.logica.memento;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class CareTaker {
+public class CareTaker implements Serializable {
+
+    // Versao da Serializacao
+    @Serial
+    private static final long serialVersionUID = 10;
+
     private final IMementoOriginator originator;
     private final Deque<Memento> stackUndo = new ArrayDeque<>();
 
@@ -34,4 +41,11 @@ public class CareTaker {
     public void reset() {
         stackUndo.clear();
     }
+
+    public Memento getLastMemento() {
+        if(!stackUndo.isEmpty())
+            return stackUndo.removeLast();
+        return null;
+    }
+
 }

@@ -47,8 +47,7 @@ public class UIConnect4 {
     }
 
     private void uiJogaMinijogo() {
-        System.out.println("\n" + gestorDeJogo.getPerguntaMinijogo());
-        gestorDeJogo.respondeMinijogo(sc);
+        gestorDeJogo.respondeMinijogo(Util.pedeString("\n" + gestorDeJogo.getPerguntaMinijogo()));
         System.out.println(gestorDeJogo.getContexto());
 
     }
@@ -134,18 +133,18 @@ public class UIConnect4 {
                 Nota: Apenas introduza o nome dos jogadores, não do computador!
                 Nomes:""" + " ");
                 gestorDeJogo.comeca(sc.nextLine().split("\\s"));
+
+                String contexto = gestorDeJogo.getContexto();
+                if(contexto.charAt(0) != ' ') {
+                    System.out.println("\n" + contexto);
+                    System.out.println("..Presssione [ENTER] para iniciar o jogo..");
+                    sc.nextLine();
+                }
+                else
+                    System.out.println("\n" + contexto.substring(1));
             }
             case 0 -> gestorDeJogo.recomeca();
         }
-        String contexto = gestorDeJogo.getContexto();
-        if(contexto.charAt(0) != ' ') {
-            System.out.println("\n" + contexto);
-            System.out.println("..Presssione [ENTER] para iniciar o jogo..");
-            sc.nextLine();
-        }
-        else
-            System.out.println("\n" + contexto.substring(1));
-
     }
 
     private void uiInicio() {
@@ -215,9 +214,10 @@ public class UIConnect4 {
         // Remove item mais antigo da pasta _> Este está sempre na ult. pos.
         ficheiros.remove(ficheiros.size() - 1);
 
-        System.out.println("0 - sair");
+
         for(int i = 0; i < ficheiros.size(); ++i)
             System.out.println((i + 1) + " - " + ficheiros.get(i));
+        System.out.println("\nIntroduza '0' para Sair");
 
         int num;
         do {
@@ -226,8 +226,35 @@ public class UIConnect4 {
 
         if(num == 0)
             return;
-        
-        List<String> replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
+
+        boolean termina = false;
+        do {
+            String replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
+            if(replay == null)
+                termina = true;
+            else
+                System.out.println(replay);
+
+            System.out.println( """
+                        
+                        ..Presssione [ENTER] para continuar..
+                          -> Insira 'sair' para terminar o replay
+                        """);
+            if(sc.nextLine().equalsIgnoreCase("sair")) {
+                gestorDeJogo.resetReplays();
+                termina = true;
+            }
+        } while(!termina);
+
+        System.out.println("""
+                        
+                        
+                        FIM DO REPLAY
+            ..Presssione [ENTER] para continuar..
+            """);
+        sc.nextLine();
+
+        /* List<String> replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
         if(replay == null)
             return;
         int i = 0;
@@ -246,12 +273,6 @@ public class UIConnect4 {
             ++i;
         }
 
-        System.out.println("""
-                        
-                        
-                        FIM DO REPLAY
-            ..Presssione [ENTER] para continuar..
-            """);
-        sc.nextLine();
+        */
     }
 }
