@@ -1,6 +1,5 @@
 package pt.isec.a2019134744.jogo.logica;
 
-import pt.isec.a2019134744.jogo.logica.dados.JogoConnect4;
 import pt.isec.a2019134744.jogo.logica.dados.Tabuleiro;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.JogadorAtivo;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Player;
@@ -100,6 +99,14 @@ public class GestorDeJogo {
     }
 
     public String getNomeJogador() { return maquinaEstados.getNomeJogador(); }
+
+    public String getDadosJogador() {
+        return maquinaEstados.getDadosJogador();
+    }
+
+    public int getCreditosJogAtivo() {
+        return maquinaEstados.getCreditosJogAtivo();
+    }
 
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {

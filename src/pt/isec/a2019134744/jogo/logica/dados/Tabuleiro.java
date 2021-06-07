@@ -6,8 +6,8 @@ import java.util.Arrays;
 public class Tabuleiro implements Serializable {
 
     // TAMANHO DO TABULEIRO
-    private final int NR_LINHAS = 6;
-    private final int NR_COLUNAS = 7;
+    public static final int NR_LINHAS = 6;
+    public static final int NR_COLUNAS = 7;
 
     private final Peca[][] tab;
 
@@ -26,7 +26,11 @@ public class Tabuleiro implements Serializable {
         for(Peca[] linha : tab) {
             for (Peca item : linha) {
                 sb.append("|");
-                sb.append(item == Peca.none ? "   " : item.getCor(" O "));
+                switch (item) {
+                    case Amarela -> sb.append(" Y ");
+                    case Vermelha -> sb.append(" R ");
+                    default -> sb.append("   ");
+                }
             }
             sb.append("|\n");
         }

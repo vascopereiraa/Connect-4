@@ -14,7 +14,6 @@ import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class JogoConnect4 implements IMementoOriginator, Serializable {
 
@@ -212,7 +211,20 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         return jogador instanceof Humano;
     }
 
-    public String getNomeJogador() { return getJogadorAtivo().getNome(); }
+    public String getNomeJogador() {
+        if(jogador1 == null || jogador2 == null)
+            return "";
+        return getJogadorAtivo().getNome();
+    }
+
+    public String getDadosJogador() {
+        if(jogador1 == null || jogador2 == null)
+            return "";
+
+        if(jogadorAtivo == JogadorAtivo.jogador1)
+            return jogador1.toString();
+        return jogador2.toString();
+    }
 
     @Override
     public String toString() {
@@ -240,6 +252,12 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
     }
 
     public String getContexto() { return contexto; }
+
+    public int getCreditosJogAtivo() {
+        if(jogador1 == null || jogador2 == null)
+            return 0;
+        return getJogadorAtivo().getCreditos();
+    }
 
     /* Métodos de controlo do Minijogo */
     public void lancaMinijogo() {
