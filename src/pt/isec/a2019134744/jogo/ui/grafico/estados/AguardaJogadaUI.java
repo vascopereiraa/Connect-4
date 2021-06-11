@@ -25,11 +25,11 @@ public class AguardaJogadaUI extends HBox {
     }
 
     private void createView() {
-        this.vistaTabuleiro = new VistaTabuleiro(gestorDeJogoObs);
-        this.getChildren().add(vistaTabuleiro);
         this.jogadores = new StackPane();
         this.vistaDadosHumano = new VistaDadosHumano(gestorDeJogoObs);
         this.vistaDadosVirtual = new VistaDadosVirtual(gestorDeJogoObs);
+        this.vistaTabuleiro = new VistaTabuleiro(gestorDeJogoObs, vistaDadosHumano);
+        this.getChildren().add(vistaTabuleiro);
         jogadores.getChildren().addAll(vistaDadosHumano, vistaDadosVirtual);
 
         this.getChildren().addAll(jogadores);

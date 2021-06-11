@@ -10,7 +10,6 @@ import pt.isec.a2019134744.jogo.logica.memento.Memento;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Scanner;
 
 public class MaquinaEstados implements IMementoOriginator, Serializable {
 
@@ -31,8 +30,10 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         atual = atual.inicia();
     }
 
-    public void comeca(String... jogadores) {
+    public boolean comeca(String... jogadores) {
+        IEstado anterior = atual;
         atual = atual.comeca(jogadores);
+        return atual == anterior;
     }
 
     public void termina() {
@@ -94,6 +95,14 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
 
     public int getCreditosJogAtivo() {
         return jogoConnect4.getCreditosJogAtivo();
+    }
+
+    public String getNomeMinijogo() {
+        return jogoConnect4.getNomeMinijogo();
+    }
+
+    public int getNPecasEspeciais() {
+        return jogoConnect4.getNPecasEspeciais();
     }
 
     /* FUNCOES DOS MINIJOGOS */

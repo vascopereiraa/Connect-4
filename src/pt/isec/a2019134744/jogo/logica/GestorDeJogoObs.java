@@ -1,12 +1,15 @@
 package pt.isec.a2019134744.jogo.logica;
 
+import javafx.beans.binding.ObjectExpression;
+import javafx.beans.property.adapter.ReadOnlyJavaBeanBooleanProperty;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.Reader;
 import java.util.List;
 
-import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.ALTERA_ESTADO;
-import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.UNDO_JOGADA;
+import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.*;
 
 public class GestorDeJogoObs {
 
@@ -35,7 +38,8 @@ public class GestorDeJogoObs {
     }
 
     public void comeca(String... jogadores) {
-        gestorDeJogo.comeca(jogadores);
+        if(gestorDeJogo.comeca(jogadores))
+            pcs.firePropertyChange(USERNAME_INVALIDO, null, null);
         pcs.firePropertyChange(ALTERA_ESTADO, null, null);
     }
 
@@ -65,7 +69,13 @@ public class GestorDeJogoObs {
     }
 
     public void respondeMinijogo(String resposta) {
+        int nPecasEspeciais = gestorDeJogo.getNPecasEspeciais();
         gestorDeJogo.respondeMinijogo(resposta);
+        int newNPecasEspeciais = gestorDeJogo.getNPecasEspeciais();
+        if(nPecasEspeciais < newNPecasEspeciais)
+            pcs.firePropertyChange(GANHA_PECA, nPecasEspeciais, newNPecasEspeciais);
+        else
+            pcs.firePropertyChange(FINAL_MINIJOGO, null, null);
         pcs.firePropertyChange(ALTERA_ESTADO, null, null);
     }
 
@@ -107,6 +117,14 @@ public class GestorDeJogoObs {
         return gestorDeJogo.getCreditosJogAtivo();
     }
 
+    public String getNomeMinijogo() {
+        return gestorDeJogo.getNomeMinijogo();
+    }
+
+    public int getNPecasEspeciais() {
+        return gestorDeJogo.getNPecasEspeciais();
+    }
+
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
         return gestorDeJogo.getPerguntaMinijogo();
@@ -125,8 +143,27 @@ public class GestorDeJogoObs {
         return gestorDeJogo.verReplay(ficheiro);
     }
 
+    public boolean carregaReplay(File hFile) {
+        boolean result = gestorDeJogo.carregaReplay(hFile);
+        if(result)
+            pcs.firePropertyChange(REPLAY, null, null);
+        return result;
+    }
+
+    public List<Object> getReplay() {
+        List<Object> dados = gestorDeJogo.getReplay();
+        if(dados == null)
+            pcs.firePropertyChange(REPLAY_END, null, null);
+        return dados;
+    }
+
+    public boolean getLeitorReplaysEstado() {
+        return gestorDeJogo.getLeitorReplaysEstado();
+    }
+
     public void resetReplays() {
         gestorDeJogo.resetReplays();
+        pcs.firePropertyChange(REPLAY_END, null, null);
     }
 
     public String gravaJogo(String nomeSave) {

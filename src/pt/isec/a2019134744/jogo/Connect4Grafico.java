@@ -18,8 +18,8 @@ public class Connect4Grafico extends Application {
 
         stage.getIcons().add(ImageLoader.getImage(ICON_APP));
         stage.setTitle("Connect-4");
-        stage.setScene(new Scene(paneOrganizer, 1000, 600));
-        stage.setMinHeight(600);
+        stage.setScene(new Scene(paneOrganizer, 1000, 630));
+        stage.setMinHeight(630);
         stage.setMinWidth(1000);
         stage.show();
     }

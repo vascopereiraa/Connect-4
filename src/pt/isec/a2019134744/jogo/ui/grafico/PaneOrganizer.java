@@ -31,10 +31,11 @@ public class PaneOrganizer extends BorderPane {
         FimJogoUI fimJogoUI = new FimJogoUI(gestorDeJogoObs);
         InicioUI inicioUI = new InicioUI(gestorDeJogoObs);
         JogaMinijogoUI jogaMinijogoUI = new JogaMinijogoUI(gestorDeJogoObs);
+        VerReplayUI verReplayUI = new VerReplayUI(gestorDeJogoObs);
 
         this.vistas = new StackPane();
         vistas.getChildren().addAll(inicioUI,aguardaJogadaUI, decisaoMinijogoUI,
-                fimJogoUI, aguardaJogadoresUI, jogaMinijogoUI);
+                fimJogoUI, aguardaJogadoresUI, jogaMinijogoUI, verReplayUI);
 
         this.setCenter(vistas);
     }

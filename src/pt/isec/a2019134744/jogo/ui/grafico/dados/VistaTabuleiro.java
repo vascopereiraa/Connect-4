@@ -15,6 +15,7 @@ import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.*;
 public class VistaTabuleiro extends BorderPane {
 
     private GestorDeJogoObs gestorDeJogoObs;
+    private VistaDadosHumano jogadas;
 
     private GridPane tab;
     private List<PecaTabuleiro> pecas;
@@ -23,21 +24,20 @@ public class VistaTabuleiro extends BorderPane {
     private final double horizontalGap = 5.0;
     private final double paddingCircle = 12.0;
 
-    public VistaTabuleiro(GestorDeJogoObs gestorDeJogoObs) {
+    private boolean isReplay;
+
+    public VistaTabuleiro(GestorDeJogoObs gestorDeJogoObs, VistaDadosHumano jogadas) {
         this.gestorDeJogoObs = gestorDeJogoObs;
         this.pecas = new ArrayList<>();
+        this.jogadas = jogadas;
+        this.isReplay = false;
         createView();
         registerListeners();
         registaObservers();
         atualiza();
     }
 
-    public void atualiza() {
-        /*int x = 8;
-        System.out.println((x-1) / Tabuleiro.NR_COLUNAS);
-        System.out.println((x-1) % Tabuleiro.NR_COLUNAS);*/
-
-        String tabuleiro = gestorDeJogoObs.getTabuleiro().trim();
+    public void atualiza(String tabuleiro) {
         System.out.println(tabuleiro);
         tabuleiro = tabuleiro.replace("|", "");
         tabuleiro = tabuleiro.replace("   ", "_");
@@ -63,6 +63,10 @@ public class VistaTabuleiro extends BorderPane {
                     peca.setCor(Color.LIGHTGRAY);
                 }
             }
+    }
+
+    public void atualiza() {
+        atualiza(gestorDeJogoObs.getTabuleiro().trim());
     }
 
     public void createView() {
@@ -92,7 +96,7 @@ public class VistaTabuleiro extends BorderPane {
     public void registaObservers() {
         for(PecaTabuleiro peca : pecas) {
             peca.addObserver(ENTRA_RATO, e -> {
-                if(gestorDeJogoObs.isHumano()) {
+                if(gestorDeJogoObs.isHumano() && !isReplay) {
                     int coluna = (int) e.getNewValue();
                     for (int i = 0; i < Tabuleiro.NR_LINHAS; ++i) {
                         ((PecaTabuleiro) tab.getChildren().get(coluna + i * Tabuleiro.NR_COLUNAS)).alteraCor();
@@ -101,7 +105,7 @@ public class VistaTabuleiro extends BorderPane {
             });
 
             peca.addObserver(SAI_RATO, e -> {
-                if(gestorDeJogoObs.isHumano()) {
+                if(gestorDeJogoObs.isHumano() && !isReplay) {
                     int coluna = (int) e.getNewValue();
                     for (int i = 0; i < Tabuleiro.NR_LINHAS; ++i) {
                         ((PecaTabuleiro) tab.getChildren().get(coluna + i * Tabuleiro.NR_COLUNAS)).resetCor();
@@ -111,8 +115,22 @@ public class VistaTabuleiro extends BorderPane {
 
             peca.addObserver(JOGA_PECA, e -> {
                 int coluna = (int) e.getNewValue();
-                if(gestorDeJogoObs.isHumano())
-                    gestorDeJogoObs.joga(coluna + 1);
+                if(gestorDeJogoObs.isHumano() && !isReplay) {
+                    if(jogadas != null) {
+                        if (jogadas.jogaPeca())
+                            gestorDeJogoObs.joga(coluna + 1);
+                        else
+                            gestorDeJogoObs.jogaEspecial(coluna + 1);
+                    }
+                }
+            });
+
+            gestorDeJogoObs.addPropertyChangeListener(REPLAY, e -> {
+                isReplay = true;
+            });
+
+            gestorDeJogoObs.addPropertyChangeListener(REPLAY_END, e -> {
+                isReplay = false;
             });
         }
 
@@ -121,10 +139,5 @@ public class VistaTabuleiro extends BorderPane {
         gestorDeJogoObs.addPropertyChangeListener(UNDO_JOGADA, e -> {
             atualiza();
         });
-    }
-
-    public void alteraDims(double width, double height) {
-        setWidth(width);
-        setHeight(height);
     }
 }

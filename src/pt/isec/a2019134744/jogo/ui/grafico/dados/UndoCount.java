@@ -64,9 +64,10 @@ public class UndoCount extends Stage {
         sliderCount.setShowTickMarks(true);
 
         undoCount = new TextField();
-        undoCount.setMaxWidth(80);
+        undoCount.setMaxWidth(50);
         undoCount.setFont(fonte);
         undoCount.setText("1");
+        undoCount.setEditable(false);
 
         controlos.getChildren().addAll(sliderCount, undoCount);
 

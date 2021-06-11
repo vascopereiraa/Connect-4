@@ -48,4 +48,8 @@ public class CareTaker implements Serializable {
         return null;
     }
 
+    public boolean isLastMementoEmpty() {
+        return stackUndo.isEmpty();
+    }
+
 }

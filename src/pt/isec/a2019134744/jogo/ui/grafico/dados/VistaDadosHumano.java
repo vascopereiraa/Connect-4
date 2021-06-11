@@ -8,6 +8,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import pt.isec.a2019134744.jogo.logica.GestorDeJogoObs;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.FontLoader;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.ImageLoader;
@@ -57,7 +59,6 @@ public class VistaDadosHumano extends VBox {
 
         descricao = new Text("");
         descricao.setFont(fonte);
-
 
         StackPane stackPane = new StackPane();
         stackPane.setPadding(new Insets(10.0));
@@ -117,7 +118,7 @@ public class VistaDadosHumano extends VBox {
         });
 
         btnDesistir.setOnAction(e -> {
-            gestorDeJogoObs.desiste();
+            new ConfirmDesiste(getScene().getWindow(), gestorDeJogoObs);
         });
 
         btnDesistir.setOnMouseEntered(e -> {
@@ -140,12 +141,19 @@ public class VistaDadosHumano extends VBox {
         });
     }
 
+    public boolean jogaPeca() {
+        if(pecaNormal.isSelected())
+            return true;
+        return !pecaEspecial.isSelected();
+    }
+
     private void atualiza() {
         setVisible(gestorDeJogoObs.isHumano());
         String descJog = ConsoleColors.removeConsoleColors(gestorDeJogoObs.getDadosJogador());
         descricao.setText(descJog.substring(descJog.indexOf('\n') + 1));
         title.setText(ConsoleColors.removeConsoleColors(gestorDeJogoObs.getNomeJogador()));
-        // if(gestorDeJogoObs.getNPecasEspeciais() > 0) pecaEspecial.setDisable(false);
+        pecaEspecial.setDisable(!(gestorDeJogoObs.getNPecasEspeciais() > 0));
+        pecaNormal.setSelected(true);
         btnUndo.setDisable(gestorDeJogoObs.getCreditosJogAtivo() <= 0);
     }
 

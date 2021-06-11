@@ -7,6 +7,7 @@ public class ConstantesUI {
     public static final String ICON_MAINMENU = "MainMenu-icon.png";
     public static final String ICON_UNDO = "Undo-icon.png";
     public static final String ICON_FORFEIT = "Forfeit-icon.png";
+    public static final String ICON_TROPHY = "Trophy-icon.png";
 
     // FONTES
     public static final String TITLE_FONT = "ostrich-sans-black.ttf";
@@ -28,6 +29,10 @@ public class ConstantesUI {
     // OBSERVER
     public static final String ALTERA_ESTADO = "ALTERA_ESTADO";
     public static final String UNDO_JOGADA = "UNDO_JOGADA";
-    public static final String ALTERA_DADOS = "ALTERA_DADOS";
+    public static final String GANHA_PECA = "GANHA_PECA";
+    public static final String FINAL_MINIJOGO = "FINAL_MINIJOGO";
+    public static final String USERNAME_INVALIDO = "USERNAME_INVALIDO";
+    public static final String REPLAY = "REPLAY";
+    public static final String REPLAY_END = "REPLAY_END";
 
 }

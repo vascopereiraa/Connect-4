@@ -5,6 +5,7 @@ import pt.isec.a2019134744.jogo.logica.dados.jogadores.JogadorAtivo;
 import pt.isec.a2019134744.jogo.logica.dados.jogadores.Player;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import pt.isec.a2019134744.jogo.logica.memento.CareTaker;
+import pt.isec.a2019134744.jogo.logica.memento.Memento;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -13,8 +14,9 @@ import java.util.*;
 
 public class GestorDeJogo {
 
-    private final String REPLAYS_PATH = "." + File.separator + "res" + File.separator + "replays";
-    private final String SAVES_PATH = "." + File.separator + "res" + File.separator + "saves";
+    public static final String REPLAYS_PATH = "." + File.separator + "res" + File.separator + "replays";
+    public static final String SAVES_PATH = "." + File.separator + "res" + File.separator + "saves";
+    public static final String RES_PATH = "." + File.separator + "res";
 
     private MaquinaEstados maquinaEstados;
     private final CareTaker careTaker;
@@ -40,8 +42,8 @@ public class GestorDeJogo {
         maquinaEstados.inicia();
     }
 
-    public void comeca(String... jogadores) {
-        maquinaEstados.comeca(jogadores);
+    public boolean comeca(String... jogadores) {
+        return maquinaEstados.comeca(jogadores);
     }
 
     public void termina() {
@@ -106,6 +108,14 @@ public class GestorDeJogo {
 
     public int getCreditosJogAtivo() {
         return maquinaEstados.getCreditosJogAtivo();
+    }
+
+    public String getNomeMinijogo() {
+        return maquinaEstados.getNomeMinijogo();
+    }
+
+    public int getNPecasEspeciais() {
+        return maquinaEstados.getNPecasEspeciais();
     }
 
     /* FUNCOES DOS MINIJOGOS */
@@ -195,6 +205,50 @@ public class GestorDeJogo {
         Tabuleiro tab = (Tabuleiro) array[3];
 
         return jogador.toString() + "\n" + tab.imprimeTab() + "\n";
+    }
+
+    public boolean carregaReplay(File hFile) {
+
+        if(leitorReplays == null) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(hFile))) {
+
+                leitorReplays = (CareTaker) ois.readObject();
+                return true;
+
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public List<Object> getReplay() {
+        Memento lastMemento = leitorReplays.getLastMemento();
+        if(lastMemento == null) {
+            leitorReplays = null;
+            return null;
+        }
+        Object[] array = (Object[]) lastMemento.getSnapshot();
+        if(array == null) {
+            leitorReplays = null;
+            return null;
+        }
+        JogadorAtivo jogadorAtivo = (JogadorAtivo) array[2];
+        Player jogador;
+        if(jogadorAtivo == JogadorAtivo.jogador1)
+            jogador = (Player) array[0];
+        else
+            jogador = (Player) array[1];
+        Tabuleiro tab = (Tabuleiro) array[3];
+
+        List<Object> dados = new ArrayList<>();
+        dados.add(tab);
+        dados.add(jogador);
+        return dados;
+    }
+
+    public boolean getLeitorReplaysEstado() {
+        return leitorReplays.isLastMementoEmpty();
     }
 
     public void resetReplays() {

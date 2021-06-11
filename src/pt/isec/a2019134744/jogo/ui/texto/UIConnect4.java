@@ -49,7 +49,6 @@ public class UIConnect4 {
     private void uiJogaMinijogo() {
         gestorDeJogo.respondeMinijogo(Util.pedeString("\n" + gestorDeJogo.getPerguntaMinijogo()));
         System.out.println(gestorDeJogo.getContexto());
-
     }
 
     private void uiDecisaoMinijogo() {
@@ -253,26 +252,5 @@ public class UIConnect4 {
             ..Presssione [ENTER] para continuar..
             """);
         sc.nextLine();
-
-        /* List<String> replay = gestorDeJogo.verReplay(ficheiros.get(num - 1));
-        if(replay == null)
-            return;
-        int i = 0;
-        while(i < replay.size()) {
-            String frase = replay.get(i);
-            if ("espera".equalsIgnoreCase(frase)) {
-                System.out.println( """
-                        ..Presssione [ENTER] para continuar..
-                          -> Insira 'sair' para terminar o replay
-                        """);
-                if(sc.nextLine().equalsIgnoreCase("sair"))
-                    break;
-            } else {
-                System.out.println(frase);
-            }
-            ++i;
-        }
-
-        */
     }
 }

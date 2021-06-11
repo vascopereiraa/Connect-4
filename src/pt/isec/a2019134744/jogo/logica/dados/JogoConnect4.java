@@ -17,6 +17,10 @@ import java.util.List;
 
 public class JogoConnect4 implements IMementoOriginator, Serializable {
 
+    // Versao da Serializacao
+    @Serial
+    private static final long serialVersionUID = 10;
+
     // Info Jogo
     private String contexto;
     private StringBuilder contextoJogo;
@@ -126,7 +130,11 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogadorAtivo = JogadorAtivo.jogador1;
     }
 
-    private Player getJogadorAtivo() { return jogadorAtivo == JogadorAtivo.jogador1 ? jogador1 : jogador2; }
+    private Player getJogadorAtivo() {
+        if(jogador1 == null || jogador2 == null)
+            return new Humano("null", Peca.none);
+        return jogadorAtivo == JogadorAtivo.jogador1 ? jogador1 : jogador2;
+    }
 
     public String imprimeTabuleiroJogo() {
         return tabuleiro.imprimeTab();
@@ -249,6 +257,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         feedback = getJogadorAtivo().toString() + "\n";
         infoReplay.add(feedback);
         return feedback;
+
     }
 
     public String getContexto() { return contexto; }
@@ -257,6 +266,10 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         if(jogador1 == null || jogador2 == null)
             return 0;
         return getJogadorAtivo().getCreditos();
+    }
+
+    public int getNPecasEspeciais() {
+        return getJogadorAtivo().getnPecasEspeciais();
     }
 
     /* Métodos de controlo do Minijogo */
@@ -310,6 +323,15 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
                 switchMinijogo();
             }
         }
+    }
+
+    public String getNomeMinijogo() {
+        if(jogoAtivo == null)
+            return "";
+        if(jogoAtivo instanceof JogoCalculos)
+            return "Jogo dos Cálculos";
+        else
+            return "Jogo das Palavras";
     }
 
     public void switchExecucaoMinijogo() {
