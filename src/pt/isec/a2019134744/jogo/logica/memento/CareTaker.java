@@ -29,7 +29,6 @@ public class CareTaker implements Serializable {
         Deque<Memento> anteriores = new ArrayDeque<>();
         for (int i = 0; i < nJogadas + 1; ++i)
             anteriores.push(stackUndo.pop());
-//        System.out.println("Anteriores = " + anteriores.size() + "\nStack = " + stackUndo.size());
         Memento anterior = anteriores.pop();
         if (!originator.setMemento(anterior, nJogadas)) {
             anteriores.push(anterior);
@@ -50,6 +49,10 @@ public class CareTaker implements Serializable {
 
     public boolean isLastMementoEmpty() {
         return stackUndo.isEmpty();
+    }
+
+    public int getJogadasGravadas() {
+        return stackUndo.size();
     }
 
 }

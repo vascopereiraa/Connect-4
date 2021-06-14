@@ -202,6 +202,8 @@ public class AguardaJogadoresUI extends BorderPane {
         setVisible(gestorDeJogoObs.getSituacao() == Situacao.AguardaJogadores);
         jogadores.setVisible(true);
         nomes.setVisible(false);
+        jogador1.clear();
+        jogador2.clear();
         nJog = -1;
     }
 }

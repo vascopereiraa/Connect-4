@@ -1,12 +1,9 @@
 package pt.isec.a2019134744.jogo.logica;
 
-import javafx.beans.binding.ObjectExpression;
-import javafx.beans.property.adapter.ReadOnlyJavaBeanBooleanProperty;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.io.Reader;
 import java.util.List;
 
 import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.*;
@@ -29,6 +26,10 @@ public class GestorDeJogoObs {
     public void undo(int nJogadas) {
         gestorDeJogo.undo(nJogadas);
         pcs.firePropertyChange(UNDO_JOGADA, null, null);
+    }
+
+    public int getJogadasGravadas() {
+        return gestorDeJogo.getJogadasGravadas();
     }
 
     /* FUNCOES DA MAQUINA DE ESTADOS */
@@ -70,12 +71,15 @@ public class GestorDeJogoObs {
 
     public void respondeMinijogo(String resposta) {
         int nPecasEspeciais = gestorDeJogo.getNPecasEspeciais();
+        Situacao s = gestorDeJogo.getSituacao();
         gestorDeJogo.respondeMinijogo(resposta);
         int newNPecasEspeciais = gestorDeJogo.getNPecasEspeciais();
-        if(nPecasEspeciais < newNPecasEspeciais)
-            pcs.firePropertyChange(GANHA_PECA, nPecasEspeciais, newNPecasEspeciais);
-        else
-            pcs.firePropertyChange(FINAL_MINIJOGO, null, null);
+        if(s != gestorDeJogo.getSituacao()) {
+            if (nPecasEspeciais < newNPecasEspeciais)
+                pcs.firePropertyChange(GANHA_PECA, nPecasEspeciais, newNPecasEspeciais);
+            else
+                pcs.firePropertyChange(FINAL_MINIJOGO, null, null);
+        }
         pcs.firePropertyChange(ALTERA_ESTADO, null, null);
     }
 
@@ -170,11 +174,24 @@ public class GestorDeJogoObs {
         return gestorDeJogo.gravaJogo(nomeSave);
     }
 
+    public String gravaJogo(File file) {
+        return gestorDeJogo.gravajogo(file);
+    }
+
     public List<String> getListaSaves() {
         return gestorDeJogo.getListaSaves();
     }
 
     public String carregaJogo(String nomeSave) {
         return gestorDeJogo.carregaJogo(nomeSave);
+    }
+
+    public String carregaJogo(File file) {
+        String res = gestorDeJogo.carregaJogo(file);
+        if(res.equalsIgnoreCase("")) {
+            pcs.firePropertyChange(ALTERA_ESTADO, null, null);
+            gestorDeJogo.iniciaMinijogos();
+        }
+        return res;
     }
 }

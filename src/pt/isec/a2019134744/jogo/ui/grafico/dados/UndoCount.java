@@ -54,7 +54,7 @@ public class UndoCount extends Stage {
 
         sliderCount = new Slider();
         sliderCount.setMin(1);
-        sliderCount.setMax(gestorDeJogoObs.getCreditosJogAtivo());
+        sliderCount.setMax(Math.min(gestorDeJogoObs.getCreditosJogAtivo(), gestorDeJogoObs.getJogadasGravadas()));
         sliderCount.setValue(1);
         sliderCount.setBlockIncrement(1);
         sliderCount.setMajorTickUnit(1);

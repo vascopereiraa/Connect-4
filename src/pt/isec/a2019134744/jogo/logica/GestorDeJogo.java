@@ -37,13 +37,20 @@ public class GestorDeJogo {
             careTaker.undo(nJogadas);
     }
 
+    public int getJogadasGravadas() {
+        return careTaker.getJogadasGravadas();
+    }
+
     /* FUNCOES DA MAQUINA DE ESTADOS */
     public void inicia() {
         maquinaEstados.inicia();
     }
 
     public boolean comeca(String... jogadores) {
-        return maquinaEstados.comeca(jogadores);
+        boolean res = maquinaEstados.comeca(jogadores);
+        if(!res)
+            careTaker.gravaMemento();
+        return res;
     }
 
     public void termina() {
@@ -121,6 +128,10 @@ public class GestorDeJogo {
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
         return maquinaEstados.getPerguntaMinijogo();
+    }
+
+    public void iniciaMinijogos() {
+        maquinaEstados.iniciaMinijogos();
     }
 
     /* FUNCOES DE SAVES */
@@ -267,8 +278,11 @@ public class GestorDeJogo {
             nomeSave = nomeSave.split("\\.")[0];
 
 
-        File f = new File(SAVES_PATH + File.separator + nomeSave + ".dat");
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
+        return gravajogo(new File(SAVES_PATH + File.separator + nomeSave + ".dat"));
+    }
+
+    public String gravajogo(File file) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
 
             oos.writeObject(maquinaEstados);
 
@@ -276,7 +290,7 @@ public class GestorDeJogo {
             return "Nao foi possivel efetuar a gravação do jogo";
         }
 
-        return "Jogo gravado com o nome " + nomeSave + " com sucesso!";
+        return "Jogo gravado com o nome " + file.getName() + " com sucesso!";
     }
 
     public List<String> getListaSaves() {
@@ -298,18 +312,19 @@ public class GestorDeJogo {
     }
 
     public String carregaJogo(String nomeSave) {
+        return carregaJogo(new File(SAVES_PATH + File.separator + nomeSave));
+    }
 
-        File f = new File(SAVES_PATH + File.separator + nomeSave);
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+    public String carregaJogo(File file) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
             maquinaEstados = (MaquinaEstados) ois.readObject();
             if(maquinaEstados != null)
                 careTaker.reset();
+            return "";
 
         } catch (IOException | ClassNotFoundException e) {
-            return "Não foi possivel carregar o save " + nomeSave + " indicado!";
+            return "Não foi possivel carregar o save " + file.getName() + " indicado!";
         }
-
-        return "";
     }
 }

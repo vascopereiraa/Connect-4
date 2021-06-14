@@ -6,6 +6,7 @@ import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 import java.io.Serializable;
 
 public abstract class Player implements Serializable {
+
     private final String nome;
     private final Peca peca;
 
@@ -22,6 +23,10 @@ public abstract class Player implements Serializable {
 
     public int getJogada() {
         return 0;
+    }
+
+    public void setNJogada(int nJogada) {
+
     }
 
     public void incJogada() {

@@ -154,7 +154,7 @@ public class VistaDadosHumano extends VBox {
         title.setText(ConsoleColors.removeConsoleColors(gestorDeJogoObs.getNomeJogador()));
         pecaEspecial.setDisable(!(gestorDeJogoObs.getNPecasEspeciais() > 0));
         pecaNormal.setSelected(true);
-        btnUndo.setDisable(gestorDeJogoObs.getCreditosJogAtivo() <= 0);
+        btnUndo.setDisable(Math.min(gestorDeJogoObs.getCreditosJogAtivo(), gestorDeJogoObs.getJogadasGravadas()) <= 0);
     }
 
 

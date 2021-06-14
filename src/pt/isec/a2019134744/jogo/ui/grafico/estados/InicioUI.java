@@ -109,8 +109,10 @@ public class InicioUI extends BorderPane {
                     new FileChooser.ExtensionFilter("Saves (*.dat)", "*.dat")
             );
             File hFile = fileChooser.showOpenDialog(getScene().getWindow());
-            if(hFile != null)
+            if(hFile != null) {
                 System.out.println(hFile.getName());
+                gestorDeJogoObs.carregaJogo(hFile);
+            }
         });
     }
 

@@ -103,8 +103,8 @@ public class JogaMinijogoUI extends VBox {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    jogoCalculos.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("-?\\d+")) {
+                    jogoCalculos.setText(newValue.replaceAll("[^-?\\d+]", ""));
                 }
             }
         });
@@ -147,28 +147,31 @@ public class JogaMinijogoUI extends VBox {
     }
 
     public void atualiza() {
-        setVisible(gestorDeJogoObs.getSituacao() == Situacao.JogaMinijogo);
-        title.setText(gestorDeJogoObs.getNomeMinijogo());
-        if (gestorDeJogoObs.getNomeMinijogo().equalsIgnoreCase("Jogo das Palavras")) {
-            jogoPalavras.setVisible(true);
-            jogoAtivo = 1;
-            btnOk.setTranslateX(0);
+        if (gestorDeJogoObs.getSituacao() == Situacao.JogaMinijogo) {
+            setVisible(true);
+            title.setText(gestorDeJogoObs.getNomeMinijogo());
+            if (gestorDeJogoObs.getNomeMinijogo().equalsIgnoreCase("Jogo das Palavras")) {
+                jogoPalavras.setVisible(true);
+                jogoAtivo = 1;
+                btnOk.setTranslateX(0);
+            } else {
+                jogoPalavras.setVisible(false);
+                jogoAtivo = 2;
+                btnOk.setTranslateX(-120);
+            }
+            String infoJogo = gestorDeJogoObs.getInfoJogo();
+            int index = infoJogo.indexOf("Minijogo");
+            if (index != -1) {
+                infoJogo = infoJogo.substring(index);
+                infoJogo = infoJogo.substring(infoJogo.indexOf('\n') + 1);
+            }
+            regras.setText(infoJogo);
+            String a = gestorDeJogoObs.getPerguntaMinijogo();
+            System.out.println(a);
+            pergunta.setText(a);
+            System.out.println(gestorDeJogoObs.getContexto());
         }
-        else {
-            jogoPalavras.setVisible(false);
-            jogoAtivo = 2;
-            btnOk.setTranslateX(-120);
-        }
-        String infoJogo = gestorDeJogoObs.getInfoJogo();
-        int index = infoJogo.indexOf("Minijogo");
-        if(index != -1) {
-            infoJogo = infoJogo.substring(index);
-            infoJogo = infoJogo.substring(infoJogo.indexOf('\n') + 1);
-        }
-        regras.setText(infoJogo);
-        String a = gestorDeJogoObs.getPerguntaMinijogo();
-        System.out.println(gestorDeJogoObs.getPerguntaMinijogo());
-        pergunta.setText(gestorDeJogoObs.getPerguntaMinijogo());
-        System.out.println(gestorDeJogoObs.getContexto());
+        else
+            setVisible(false);
     }
 }

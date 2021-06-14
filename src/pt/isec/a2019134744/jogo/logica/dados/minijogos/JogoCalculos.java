@@ -33,7 +33,9 @@ public class JogoCalculos implements IJogo {
             case 3 -> { operador = '*'; resultado = num1 * num2; }
             default -> { operador = '/'; resultado = num1 / num2; }
         }
-        return "Q" + nQuestao++ + ": Introduza o resultado de " + num1 + " " + operador + " " + num2 + ": ";
+        String teste = "Q" + nQuestao++ + ": Introduza o resultado de " + num1 + " " + operador + " " + num2 + ": ";
+        System.err.println(teste);
+        return teste;
     }
 
     @Override
@@ -70,7 +72,8 @@ public class JogoCalculos implements IJogo {
     }
 
     private int getRandomNum() {
-        return (int)(Math.random() * 100) + 1;
+        return (int)(Math.random() * 10) + 1;
+        // return (int)(Math.random() * 100) + 1;
     }
 
     @Override

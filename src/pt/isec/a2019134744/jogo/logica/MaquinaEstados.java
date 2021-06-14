@@ -110,6 +110,9 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return jogoConnect4.getPerguntaMinijogo();
     }
 
+    public void iniciaMinijogos() {
+        jogoConnect4.iniciaMinijogos();
+    }
 
     /* FUNCOES PARA O UNDO */
     @Override

@@ -28,6 +28,10 @@ public class Humano extends Player {
         nJogada = 1;
     }
 
+    public void setNJogada(int nJogada) {
+        this.nJogada = nJogada;
+    }
+
     public int getnPecasEspeciais() {
         return nPecasEspeciais;
     }

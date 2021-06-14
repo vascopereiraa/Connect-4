@@ -338,7 +338,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         isMinijogoDecorrer = !isMinijogoDecorrer;
     }
 
-    private void iniciaMinijogos() {
+    public void iniciaMinijogos() {
         jogoCalculos = new JogoCalculos();
         jogoPalavras = new JogoPalavras();
         jogoAtivo = jogoCalculos;
@@ -376,10 +376,14 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogador2.setCreditos(creditosJogador2);
             jogador1.setnPecasEspeciais(pecasEspJogador1);
             jogador2.setnPecasEspeciais(pecasEspJogador2);
-            if(jogador == JogadorAtivo.jogador1)
+            int jogadas;
+            if(jogador == JogadorAtivo.jogador1) {
                 jogador1.resetJogada();
-            else
+                jogador2.setNJogada(Math.max(jogador2.getJogada() - nJogadas, 0));
+            } else {
                 jogador2.resetJogada();
+                jogador1.setNJogada(Math.max(jogador1.getJogada() - nJogadas, 0));
+            }
 
             contexto = "Foram revertidas " + nJogadas + " jogadas!\n";
 
