@@ -14,6 +14,8 @@ import pt.isec.a2019134744.jogo.logica.GestorDeJogoObs;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.FontLoader;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.ImageLoader;
+import pt.isec.a2019134744.jogo.ui.grafico.resources.MusicPlayer;
+import pt.isec.a2019134744.jogo.ui.grafico.resources.Resources;
 import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 
 import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.*;
@@ -67,10 +69,14 @@ public class FimJogoUI extends VBox {
     }
 
     public void atualiza() {
-        setVisible(gestorDeJogoObs.getSituacao() == Situacao.FimJogo);
-        String finale = ConsoleColors.removeConsoleColors(gestorDeJogoObs.getInfoJogo());
-        texto.setText(finale.substring(0, finale.indexOf('\n')));
-
+        if(gestorDeJogoObs.getSituacao() == Situacao.FimJogo) {
+            setVisible(true);
+            String finale = ConsoleColors.removeConsoleColors(gestorDeJogoObs.getInfoJogo());
+            texto.setText(finale.substring(0, finale.indexOf('\n')));
+            MusicPlayer.playMusic(SOUND_WINNER);
+        }
+        else
+            setVisible(false);
     }
 
 }

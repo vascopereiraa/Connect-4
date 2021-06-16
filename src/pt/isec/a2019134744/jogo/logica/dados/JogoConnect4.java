@@ -9,6 +9,7 @@ import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoCalculos;
 import pt.isec.a2019134744.jogo.logica.dados.minijogos.JogoPalavras;
 import pt.isec.a2019134744.jogo.logica.memento.IMementoOriginator;
 import pt.isec.a2019134744.jogo.logica.memento.Memento;
+import pt.isec.a2019134744.jogo.ui.grafico.Colors;
 import pt.isec.a2019134744.jogo.utils.ConsoleColors;
 
 import java.io.*;
@@ -90,7 +91,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogadorAtivo = JogadorAtivo.jogador1;
         else
             jogadorAtivo = JogadorAtivo.jogador2;
-
+        Colors.setNext(getJogadorAtivo().getPeca().placePeca().charAt(1));
         sb.append("O primeiro a jogar é o jogador ").append(getJogadorAtivo().getNome()).append("!!\n");
 
         contexto = sb.toString();
@@ -128,6 +129,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogadorAtivo = JogadorAtivo.jogador2;
         else
             jogadorAtivo = JogadorAtivo.jogador1;
+        Colors.setNext(getJogadorAtivo().getPeca().placePeca().charAt(1));
     }
 
     private Player getJogadorAtivo() {
@@ -329,7 +331,7 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         if(jogoAtivo == null)
             return "";
         if(jogoAtivo instanceof JogoCalculos)
-            return "Jogo dos Cálculos";
+            return "Jogo dos Calculos";
         else
             return "Jogo das Palavras";
     }
@@ -344,6 +346,10 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
         jogoAtivo = jogoCalculos;
         isMinijogoDecorrer = false;
         repeatMinijogo = -1;
+    }
+
+    public int getSegundos() {
+        return jogoAtivo.getSegundos();
     }
 
     /* METODOS PARA A FUNCIONALIDADE DE 'UNDO' */
@@ -376,7 +382,6 @@ public class JogoConnect4 implements IMementoOriginator, Serializable {
             jogador2.setCreditos(creditosJogador2);
             jogador1.setnPecasEspeciais(pecasEspJogador1);
             jogador2.setnPecasEspeciais(pecasEspJogador2);
-            int jogadas;
             if(jogador == JogadorAtivo.jogador1) {
                 jogador1.resetJogada();
                 jogador2.setNJogada(Math.max(jogador2.getJogada() - nJogadas, 0));

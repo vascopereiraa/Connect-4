@@ -9,5 +9,5 @@ public interface IJogo {
     String setResposta(String resposta);
     boolean isVencedor();
     boolean isFinished ();
-
+    int getSegundos();
 }

@@ -88,7 +88,6 @@ public class InicioUI extends BorderPane {
                 if (!gestorDeJogoObs.carregaReplay(hFile)) {
                     Alert erro = new Alert(Alert.AlertType.ERROR);
                     erro.setHeaderText(null);
-                    assert hFile != null;
                     erro.setContentText("Não foi possivel carregar o replay a partir do ficheiro:\n" +
                             hFile.getName());
                     erro.setTitle("Error Loading Replay");

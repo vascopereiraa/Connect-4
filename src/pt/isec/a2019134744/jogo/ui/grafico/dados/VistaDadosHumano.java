@@ -8,9 +8,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import pt.isec.a2019134744.jogo.logica.GestorDeJogoObs;
+import pt.isec.a2019134744.jogo.ui.grafico.Colors;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.FontLoader;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.ImageLoader;
 import pt.isec.a2019134744.jogo.utils.ConsoleColors;
@@ -22,9 +21,7 @@ public class VistaDadosHumano extends VBox {
     private final GestorDeJogoObs gestorDeJogoObs;
 
     private Label title;
-
     private Font fonte;
-
     private Text descricao;
 
     private HBox radioButtons;
@@ -150,12 +147,12 @@ public class VistaDadosHumano extends VBox {
     private void atualiza() {
         setVisible(gestorDeJogoObs.isHumano());
         String descJog = ConsoleColors.removeConsoleColors(gestorDeJogoObs.getDadosJogador());
-        descricao.setText(descJog.substring(descJog.indexOf('\n') + 1));
+        descJog = descJog.substring(descJog.indexOf('\n') + 1);
+        String descricaoJog = "Peça : " + Colors.getColor() + "\n" + descJog.substring(descJog.indexOf('\n') + 1);
+        descricao.setText(descricaoJog);
         title.setText(ConsoleColors.removeConsoleColors(gestorDeJogoObs.getNomeJogador()));
         pecaEspecial.setDisable(!(gestorDeJogoObs.getNPecasEspeciais() > 0));
         pecaNormal.setSelected(true);
-        btnUndo.setDisable(Math.min(gestorDeJogoObs.getCreditosJogAtivo(), gestorDeJogoObs.getJogadasGravadas()) <= 0);
+        btnUndo.setDisable(Math.min(gestorDeJogoObs.getCreditosJogAtivo(), gestorDeJogoObs.getJogadasGravadas() - 1) <= 0);
     }
-
-
 }

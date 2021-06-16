@@ -27,8 +27,8 @@ public class Tabuleiro implements Serializable {
             for (Peca item : linha) {
                 sb.append("|");
                 switch (item) {
-                    case Amarela -> sb.append(" Y ");
-                    case Vermelha -> sb.append(" R ");
+                    case Amarela -> sb.append(item.placePeca());
+                    case Vermelha -> sb.append(item.placePeca());
                     default -> sb.append("   ");
                 }
             }

@@ -125,6 +125,10 @@ public class GestorDeJogo {
         return maquinaEstados.getNPecasEspeciais();
     }
 
+    public int getSegundos() {
+        return maquinaEstados.getSegundos();
+    }
+
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
         return maquinaEstados.getPerguntaMinijogo();

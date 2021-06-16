@@ -15,7 +15,6 @@ public class Connect4Grafico extends Application {
     public void start(Stage stage) {
         GestorDeJogoObs gestorDeJogoObs = new GestorDeJogoObs();
         PaneOrganizer paneOrganizer = new PaneOrganizer(gestorDeJogoObs);
-
         stage.getIcons().add(ImageLoader.getImage(ICON_APP));
         stage.setTitle("Connect-4");
         Scene mainScene = new Scene(paneOrganizer, 1000, 630);
@@ -24,6 +23,17 @@ public class Connect4Grafico extends Application {
         /*stage.setMinWidth(1000);
         stage.setMinHeight(630);*/
         stage.show();
+
+        /*PaneOrganizer paneOrganizer1 = new PaneOrganizer(gestorDeJogoObs);
+        Stage stage1 = new Stage();
+        stage1.getIcons().add(ImageLoader.getImage(ICON_APP));
+        stage1.setTitle("Connect-4");
+        Scene mainScene1 = new Scene(paneOrganizer1, 1000, 630);
+        stage1.setScene(mainScene1);
+        stage1.setResizable(false);
+        *//*stage1.setMinWidth(1000);
+        stage1.setMinHeight(630);*//*
+        stage1.show();*/
     }
 
     public static void main(String[] args) {

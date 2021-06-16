@@ -105,6 +105,10 @@ public class MaquinaEstados implements IMementoOriginator, Serializable {
         return jogoConnect4.getNPecasEspeciais();
     }
 
+    public int getSegundos() {
+        return jogoConnect4.getSegundos();
+    }
+
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
         return jogoConnect4.getPerguntaMinijogo();

@@ -129,6 +129,10 @@ public class GestorDeJogoObs {
         return gestorDeJogo.getNPecasEspeciais();
     }
 
+    public int getSegundos() {
+        return gestorDeJogo.getSegundos();
+    }
+
     /* FUNCOES DOS MINIJOGOS */
     public String getPerguntaMinijogo() {
         return gestorDeJogo.getPerguntaMinijogo();
@@ -193,5 +197,9 @@ public class GestorDeJogoObs {
             gestorDeJogo.iniciaMinijogos();
         }
         return res;
+    }
+
+    public void refreshView() {
+        pcs.firePropertyChange(REFRESH_VIEW, null, null);
     }
 }

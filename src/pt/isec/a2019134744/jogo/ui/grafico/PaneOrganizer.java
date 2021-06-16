@@ -1,9 +1,6 @@
 package pt.isec.a2019134744.jogo.ui.grafico;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -15,11 +12,10 @@ import pt.isec.a2019134744.jogo.logica.GestorDeJogo;
 import pt.isec.a2019134744.jogo.logica.GestorDeJogoObs;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import pt.isec.a2019134744.jogo.ui.grafico.estados.*;
-import pt.isec.a2019134744.jogo.ui.grafico.resources.CSSLoader;
 
 import java.io.File;
 
-import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.ALTERA_ESTADO;
+import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.*;
 
 public class PaneOrganizer extends BorderPane {
 
@@ -28,12 +24,17 @@ public class PaneOrganizer extends BorderPane {
 
     // Vistas dos Estados
     private StackPane vistas;
+    private AguardaJogadaUI aguardaJogadaUI;
 
     private MenuItem saveGame;
     private Menu view;
+    private CheckMenuItem ativarIcons;
+
+    private int visibleColors;
 
     public PaneOrganizer(GestorDeJogoObs gestorDeJogoObs) {
         this.gestorDeJogoObs = gestorDeJogoObs;
+        visibleColors = 0;
         createMenu();
         createView();
         registerListeners();
@@ -41,8 +42,7 @@ public class PaneOrganizer extends BorderPane {
     }
 
     private void createView() {
-        CSSLoader.setCSS(this, "styles.css");
-        AguardaJogadaUI aguardaJogadaUI = new AguardaJogadaUI(gestorDeJogoObs);
+        aguardaJogadaUI = new AguardaJogadaUI(gestorDeJogoObs);
         AguardaJogadoresUI aguardaJogadoresUI = new AguardaJogadoresUI(gestorDeJogoObs);
         DecisaoMinijogoUI decisaoMinijogoUI = new DecisaoMinijogoUI(gestorDeJogoObs);
         FimJogoUI fimJogoUI = new FimJogoUI(gestorDeJogoObs);
@@ -68,8 +68,12 @@ public class PaneOrganizer extends BorderPane {
         saveGame.setVisible(false);
 
         // ----- VIEW -----------
-        view = new Menu("View");
+        view = new Menu("Colors");
+        ativarIcons = new CheckMenuItem("Preto & Branco");
+        ativarIcons.setAccelerator(new KeyCodeCombination(KeyCode.B, KeyCombination.CONTROL_DOWN));
+        ativarIcons.setSelected(false);
         view.setVisible(false);
+        view.getItems().add(ativarIcons);
 
         file.getItems().addAll(saveGame);
         menuBar.getMenus().addAll(file, view);
@@ -110,6 +114,13 @@ public class PaneOrganizer extends BorderPane {
                 alert.showAndWait();
             }
         });
+
+        ativarIcons.setOnAction(e -> {
+            if(ativarIcons.isSelected())
+                aguardaJogadaUI.switchIcons(1);
+            else
+                aguardaJogadaUI.switchIcons(0);
+        });
     }
 
     private void registerObservers() {
@@ -118,11 +129,23 @@ public class PaneOrganizer extends BorderPane {
             if(gestorDeJogoObs.getSituacao() == Situacao.AguardaJogada) {
                 saveGame.setVisible(true);
                 view.setVisible(true);
+                return;
             }
             else {
                 saveGame.setVisible(false);
                 view.setVisible(false);
             }
+            view.setVisible(visibleColors == 1);
+        });
+
+        gestorDeJogoObs.addPropertyChangeListener(REPLAY, e -> {
+            visibleColors = 1;
+            view.setVisible(true);
+        });
+
+        gestorDeJogoObs.addPropertyChangeListener(REPLAY_END, e -> {
+            visibleColors = 0;
+            view.setVisible(false);
         });
     }
 

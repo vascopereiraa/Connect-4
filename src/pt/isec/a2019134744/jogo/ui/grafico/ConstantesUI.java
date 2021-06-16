@@ -14,8 +14,8 @@ public class ConstantesUI {
     public static final String APP_FONT = "Neuton-Regular.ttf";
     public static final String APP_FONT_BOLD = "Neuton-Bold.ttf";
 
-    // CSS
-
+    // MUSICA
+    public static final String SOUND_WINNER = "victory_sound.wav";
 
     // TABULEUIRO
     public static final String ENTRA_RATO = "ENTRA_RATO";
@@ -34,5 +34,6 @@ public class ConstantesUI {
     public static final String USERNAME_INVALIDO = "USERNAME_INVALIDO";
     public static final String REPLAY = "REPLAY";
     public static final String REPLAY_END = "REPLAY_END";
+    public static final String REFRESH_VIEW = "REFRESH_VIEW";
 
 }

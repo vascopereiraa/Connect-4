@@ -10,6 +10,8 @@ public class JogoCalculos implements IJogo {
     private int resultado;
     private int nQuestao;
 
+    private String questao;
+
     public JogoCalculos() {
         inicializaJogo();
     }
@@ -20,10 +22,10 @@ public class JogoCalculos implements IJogo {
         this.resultado = 0;
         this.nAcertos = 0;
         this.nQuestao = 1;
+        setPergunta();
     }
 
-    @Override
-    public String getPergunta() {
+    private void setPergunta() {
         int num1 = getRandomNum();
         int num2 = getRandomNum();
         char operador;
@@ -33,9 +35,13 @@ public class JogoCalculos implements IJogo {
             case 3 -> { operador = '*'; resultado = num1 * num2; }
             default -> { operador = '/'; resultado = num1 / num2; }
         }
-        String teste = "Q" + nQuestao++ + ": Introduza o resultado de " + num1 + " " + operador + " " + num2 + ": ";
-        System.err.println(teste);
-        return teste;
+        questao = "Q" + nQuestao++ + ": Introduza o resultado de " + num1 + " " + operador + " " + num2 + ": ";
+    }
+
+    @Override
+    public String getPergunta() {
+        System.err.println(questao);
+        return questao;
     }
 
     @Override
@@ -50,12 +56,16 @@ public class JogoCalculos implements IJogo {
 
         if(number != null && number == resultado) {
             nAcertos++;
+            setPergunta();
             return String.format("Resposta Certa!\nJá acertou em %d questões e passaram-se %d segundos\n",
                     nAcertos, (System.currentTimeMillis() - start) / 1000);
         }
-        if(nAcertos != 0)
+        if(nAcertos != 0) {
+            setPergunta();
             return String.format("Resposta Incorreta!\nJá acertou em %d questões e passaram-se %d segundos\n",
                     nAcertos, (System.currentTimeMillis() - start) / 1000);
+        }
+        setPergunta();
         return String.format("Resposta Incorreta!\nAinda não acertou nenhum calculo e passaram-se %d segundos\n",
                 (System.currentTimeMillis() - start) / 1000);
     }
@@ -63,7 +73,7 @@ public class JogoCalculos implements IJogo {
     @Override
     public boolean isFinished () {
         end = System.currentTimeMillis();
-        return nAcertos == 5;
+        return nAcertos == 5 || end - start > 30000;
     }
 
     @Override
@@ -82,6 +92,10 @@ public class JogoCalculos implements IJogo {
                 Minijogo de Contas
                 Acerte em 5 calculos em menos de 30 segundos para ganhar uma peça especial
                 """;
+    }
+
+    public int getSegundos() {
+        return 30;
     }
 
 }

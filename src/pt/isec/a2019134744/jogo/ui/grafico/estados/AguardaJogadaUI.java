@@ -45,5 +45,9 @@ public class AguardaJogadaUI extends HBox {
     public void atualiza() {
         setVisible(gestorDeJogoObs.getSituacao() == Situacao.AguardaJogada);
     }
+
+    public void switchIcons(int value) {
+        vistaTabuleiro.switchIcons(value);
+    }
 }
 

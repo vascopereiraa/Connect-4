@@ -1,5 +1,6 @@
 package pt.isec.a2019134744.jogo.ui.grafico.estados;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -19,6 +20,9 @@ import pt.isec.a2019134744.jogo.logica.GestorDeJogoObs;
 import pt.isec.a2019134744.jogo.logica.estados.Situacao;
 import pt.isec.a2019134744.jogo.ui.grafico.resources.FontLoader;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static pt.isec.a2019134744.jogo.ui.grafico.ConstantesUI.*;
 
 public class JogaMinijogoUI extends VBox {
@@ -28,14 +32,20 @@ public class JogaMinijogoUI extends VBox {
     private Label title;
     private Text regras;
     private Text pergunta;
+    private Text tempo;
     private TextField jogoPalavras;
     private TextField jogoCalculos;
     private Button btnOk;
 
+    private int segundos;
     private int jogoAtivo;
+
+    private Timer temporizador;
 
     public JogaMinijogoUI(GestorDeJogoObs gestorDeJogoObs) {
         this.gestorDeJogoObs = gestorDeJogoObs;
+        segundos = -1;
+        temporizador = null;
         setStyle("-fx-background-color: orange");
         createView();
         registerListeners();
@@ -57,6 +67,10 @@ public class JogaMinijogoUI extends VBox {
         pergunta = new Text("");
         pergunta.setFont(fonte);
         pergunta.setTextAlignment(TextAlignment.CENTER);
+
+        tempo = new Text("");
+        tempo.setFont(fonte);
+        tempo.setTextAlignment(TextAlignment.CENTER);
 
         StackPane tipoCaixa = new StackPane();
 
@@ -81,7 +95,7 @@ public class JogaMinijogoUI extends VBox {
 
         this.setSpacing(15.0);
         this.setAlignment(Pos.CENTER);
-        this.getChildren().addAll(title, regras, pergunta, hbox);
+        this.getChildren().addAll(title, tempo, regras, pergunta, hbox);
     }
 
     private void registerListeners() {
@@ -170,8 +184,44 @@ public class JogaMinijogoUI extends VBox {
             System.out.println(a);
             pergunta.setText(a);
             System.out.println(gestorDeJogoObs.getContexto());
+            if(segundos == -1) {
+                pararTimer();
+                segundos = gestorDeJogoObs.getSegundos();
+                System.out.println(segundos);
+                tempo.setText(String.valueOf(segundos));
+                temporizador = new Timer(true);
+                temporizador.scheduleAtFixedRate(new Tarefa(),
+                        1000, 1000);
+            }
         }
-        else
+        else {
+            segundos = -1;
             setVisible(false);
+        }
+    }
+
+    private void pararTimer() {
+        if(temporizador != null) {
+            temporizador.purge();
+            temporizador.cancel();
+            temporizador = null;
+        }
+    }
+
+    private class Tarefa extends TimerTask {
+        @Override
+        public void run() {
+            Platform.runLater(() -> {
+                segundos -= 1;
+                if(segundos >= 0) {
+                    tempo.setText("Tempo restante: " + segundos);
+                    System.out.println(segundos);
+                }
+                else {
+                    gestorDeJogoObs.respondeMinijogo("0");
+                    pararTimer();
+                }
+            });
+        }
     }
 }

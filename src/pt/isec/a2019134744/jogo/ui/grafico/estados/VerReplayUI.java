@@ -32,6 +32,7 @@ public class VerReplayUI extends HBox {
     private Text dados;
 
     private List<Object> info;
+    private Tabuleiro tab;
 
     public VerReplayUI(GestorDeJogoObs gestorDeJogo) {
         this.gestorDeJogoObs = gestorDeJogo;
@@ -96,12 +97,17 @@ public class VerReplayUI extends HBox {
         gestorDeJogoObs.addPropertyChangeListener(REPLAY_END, e -> {
             setVisible(false);
         });
+
+        gestorDeJogoObs.addPropertyChangeListener(REFRESH_VIEW, e -> {
+            if(isVisible())
+                tabuleiro.atualiza(tab.imprimeTab());
+        });
     }
 
     private void atualiza() {
         info = gestorDeJogoObs.getReplay();
         if(info != null) {
-            Tabuleiro tab = (Tabuleiro) info.get(0);
+            tab = (Tabuleiro) info.get(0);
             Player jog = (Player) info.get(1);
 
             jogador.setText(ConsoleColors.removeConsoleColors(jog.getNome()));

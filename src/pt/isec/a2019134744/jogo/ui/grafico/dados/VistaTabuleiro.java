@@ -6,6 +6,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import pt.isec.a2019134744.jogo.logica.GestorDeJogoObs;
 import pt.isec.a2019134744.jogo.logica.dados.Tabuleiro;
+import pt.isec.a2019134744.jogo.ui.grafico.Colors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,12 @@ public class VistaTabuleiro extends BorderPane {
 
     private GridPane tab;
     private List<PecaTabuleiro> pecas;
-    private double radiusCircle = 25.0;
+    public static double radiusCircle = 25.0;
     private final double verticalGap = 5.0;
     private final double horizontalGap = 5.0;
     private final double paddingCircle = 12.0;
+
+    private int indiceCorPeca;
 
     private boolean isReplay;
 
@@ -31,6 +34,7 @@ public class VistaTabuleiro extends BorderPane {
         this.pecas = new ArrayList<>();
         this.jogadas = jogadas;
         this.isReplay = false;
+        indiceCorPeca = 0;
         createView();
         registerListeners();
         registaObservers();
@@ -45,24 +49,14 @@ public class VistaTabuleiro extends BorderPane {
         tabuleiro = tabuleiro.replace(" ", "");
         tabuleiro = tabuleiro.replace("\n", "");
 
-        for(int i = 0; i < tabuleiro.length(); ++i)
+        for(int i = 0; i < tabuleiro.length(); ++i) {
+            PecaTabuleiro peca = pecas.get(i);
             switch (tabuleiro.charAt(i)) {
-                case 'Y' -> {
-                    PecaTabuleiro peca = pecas.get(i);
-                    peca.setFill(Color.YELLOW);
-                    peca.setCor(Color.YELLOW);
-                }
-                case 'R' -> {
-                    PecaTabuleiro peca = pecas.get(i);
-                    peca.setFill(Color.RED);
-                    peca.setCor(Color.RED);
-                }
-                default -> {
-                    PecaTabuleiro peca = pecas.get(i);
-                    peca.setFill(Color.LIGHTGRAY);
-                    peca.setCor(Color.LIGHTGRAY);
-                }
+                case 'Y' -> peca.setCor(Colors.getColor1());
+                case 'R' -> peca.setCor(Colors.getColor2());
+                default -> peca.setCor(Colors.getDefaultColor());
             }
+        }
     }
 
     public void atualiza() {
@@ -73,7 +67,7 @@ public class VistaTabuleiro extends BorderPane {
         tab = new GridPane();
         for(int i = 0; i < Tabuleiro.NR_LINHAS; ++i)
             for(int j = 0; j < Tabuleiro.NR_COLUNAS; ++j) {
-                PecaTabuleiro peca = new PecaTabuleiro(radiusCircle, j);
+                PecaTabuleiro peca = new PecaTabuleiro(radiusCircle, j, i == 0 ? String.valueOf(j + 1) : "");
                 pecas.add(peca);
                 tab.add(peca, j, i);
             }
@@ -101,6 +95,8 @@ public class VistaTabuleiro extends BorderPane {
                     for (int i = 0; i < Tabuleiro.NR_LINHAS; ++i) {
                         ((PecaTabuleiro) tab.getChildren().get(coluna + i * Tabuleiro.NR_COLUNAS)).alteraCor();
                     }
+                    for(int j = 0; j < Tabuleiro.NR_COLUNAS; ++j)
+                        ((PecaTabuleiro) tab.getChildren().get(j)).mostraColuna();
                 }
             });
 
@@ -110,6 +106,8 @@ public class VistaTabuleiro extends BorderPane {
                     for (int i = 0; i < Tabuleiro.NR_LINHAS; ++i) {
                         ((PecaTabuleiro) tab.getChildren().get(coluna + i * Tabuleiro.NR_COLUNAS)).resetCor();
                     }
+                    for(int j = 0; j < Tabuleiro.NR_COLUNAS; ++j)
+                        ((PecaTabuleiro) tab.getChildren().get(j)).escondeColuna();
                 }
             });
 
@@ -139,5 +137,13 @@ public class VistaTabuleiro extends BorderPane {
         gestorDeJogoObs.addPropertyChangeListener(UNDO_JOGADA, e -> {
             atualiza();
         });
+
+        gestorDeJogoObs.addPropertyChangeListener(REFRESH_VIEW, e -> atualiza());
+    }
+
+    public void switchIcons(int value) {
+        Colors.setValue(value);
+        gestorDeJogoObs.refreshView();
     }
 }
+

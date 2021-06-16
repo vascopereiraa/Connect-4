@@ -97,7 +97,7 @@ public class JogoPalavras implements IJogo {
     @Override
     public boolean isFinished() {
         end = System.currentTimeMillis();
-        return nCertas == 5;
+        return nCertas == 5 || end - start > maxSegundos * 1000L;
     }
 
     @Override
@@ -113,6 +113,10 @@ public class JogoPalavras implements IJogo {
                 Reescreva as seguintes palavras antes que o tempo de esgote para ganhar uma
                 peca especial
                 """;
+    }
+
+    public int getSegundos() {
+        return maxSegundos;
     }
 
 }
